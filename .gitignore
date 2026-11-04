@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv
+.env
+CLAUDE.local.md
+config.toml
+projects-wide-session-config/config.toml

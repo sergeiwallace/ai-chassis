@@ -1,0 +1,27 @@
+# Which repository scripts cannot run under an arbitrary `python3`, and why.
+#
+# Read by scripts/interpreter_guard.py. Enrolment is DATA so that the next script to grow
+# a venv dependency is a config edit rather than a re-derivation of that module's
+# reasoning -- the previous two fixes for this defect class (bd_prepush_divergence.py, and
+# credential_diagnostics.py in the sibling managed-platform repo) each stayed local to one script,
+# which is exactly why a third script repeated it.
+#
+# `reason` is MANDATORY and is printed verbatim in the failure. A guard that says only
+# "hypothesis is missing" leaves the operator to work out whether that is their problem or
+# the repository's, which is the ambiguity the guard exists to remove. The loader rejects
+# an empty one so a future enrolment cannot quietly degrade the message.
+#
+# Only scripts that RE-FRAME an environment fault as a domain finding need to be here. A
+# script whose missing dependency already produces a plain `ModuleNotFoundError`
+# traceback, or which exits naming the remedy itself (diagnose_machine_load.py,
+# git_pull_sweep.py, reap_stuck_processes.py, reap_orphaned_pytest_fixtures.py), is
+# already unmistakable and is deliberately NOT enrolled.
+version = 1
+
+[script."generate_share_surface_manifest.py"]
+# The runtime test closure materialises the portable export and runs its pytest suite as
+# the oracle for ~60 manifest rows, handing `sys.executable` to that subprocess. So both
+# the runner and what the exported suite imports must be present in THIS interpreter.
+modules = ["pytest", "hypothesis"]
+reason = """the runtime test closure runs the exported pytest suite as the oracle for \
+~60 manifest rows, and that suite imports hypothesis"""

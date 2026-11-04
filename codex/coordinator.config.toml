@@ -1,0 +1,36 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+# Codex profile: coordinator — `codex exec -p coordinator`
+# Read-only, native depth-1 pilot.  The wrapper keeps this profile launch-gated until
+# its live leaf-tool and seventh-spawn smoke tests have passed on the installed CLI.
+model = "sol"
+model_reasoning_effort = "high"
+approval_policy = "never"
+sandbox_mode = "read-only"
+web_search = "disabled"
+
+# This must precede TOML table headers: after one, it binds to that table and is unreachable.
+developer_instructions = """
+Act only as a read-only coordinator. Delegate only codebase exploration, independent review,
+research decomposition, test/log analysis, and synthesis. Never delegate implementation or any
+write-capable work. You may open at most three child threads at once and six total spawn grants.
+Every child must be a read-only leaf with delegation disabled. Wait for and close all children,
+then synthesize their results in this foreground turn; never return a placeholder waiting result.
+Do not shell out to cx or codex. Do not stage, commit, push, merge, create or remove branches, or
+alter Git worktrees.
+Repository facts stated in the prompt are a snapshot and may be stale by the time you act on them. Re-verify any load-bearing claim about file contents, sizes, paths, branch state, or what exists against the working tree before relying on it, and report any difference you find.
+"""
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 3
+job_max_runtime_seconds = 600
+
+[features]
+multi_agent = true
+
+[sandbox_workspace_write]
+network_access = false
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]

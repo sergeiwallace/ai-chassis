@@ -1,0 +1,58 @@
+{
+  "injection_enabled": true,
+  "post_compact_typed_wake_enabled": false,
+  "post_compact_notification_wake_enabled": true,
+  "enroll_all_sessions": true,
+  "enrolled_keys": [],
+  "band_thresholds": {
+    "gentle": 50,
+    "recommend": 55,
+    "urge": 60,
+    "urgent": 65,
+    "force": 80
+  },
+  "ctx_pct_call_wait_seconds": 5,
+  "idle_save_state_pct": 50,
+  "idle_save_state_after_seconds": 120,
+  "compact_rearm_after_seconds": 180,
+  "compact_rearm_retry_seconds": 300,
+  "compact_rearm_max_retries": 3,
+  "compact_rearm_background_grace_seconds": 1800,
+  "history_recency_seconds": 300,
+  "debug_diagnostics_enabled": false,
+  "turn_quiet_seconds": 15,
+  "no_composer_escalate_seconds": 120,
+  "no_composer_stall_seconds": 900,
+  "no_composer_grow_after_seconds": 60,
+  "no_composer_grow_rows": 50,
+  "no_composer_grow_max_attempts": 3,
+  "fifo_enter_delay_seconds": 0.5,
+  "fifo_input_tolerance_seconds": 1.0,
+  "landing_timeout_seconds": 5,
+  "restage_backoff_ceiling_seconds": 300,
+  "long_wait_escalate_seconds": 7200,
+  "presence_ttl_seconds": 900,
+  "reboot_resume_enabled": true,
+  "library_cutover": {
+    "compact": false,
+    "continuation": false,
+    "reauth_wake": false
+  },
+  "library_fallback_after_seconds": 8,
+  "launch_resume": {
+    "mode": "always",
+    "scenarios": {
+      "host_reboot": true,
+      "terminal_quit_or_crash": true,
+      "manual_exit": true,
+      "fresh_launch": true
+    },
+    "first_fire_delay_seconds": 15,
+    "rearm_after_clear_seconds": 30,
+    "max_wait_seconds": 900,
+    "sample_interval_seconds": 1.0,
+    "typed_fallback_enabled": true,
+    "stamp_ttl_seconds": 604800,
+    "beads_ui_enabled": false
+  }
+}

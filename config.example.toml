@@ -1,0 +1,16 @@
+# ai-harness-lite machine-local configuration template.
+#
+# Copy this file to config.toml and edit the copy. A missing config.toml or missing
+# key is allowed: readers use their documented environment override or fallback.
+
+[machine]
+# Profile used by setup and compilation. Select one of the shipped overlays or add
+# a new local overlay with a matching alias in the projects-wide configuration.
+# Environment override: AI_HOST.
+profile = "mac"
+
+[codex]
+# Optional usage-estimate tier for local status tooling. This is an estimate, not
+# an account entitlement or live quota API. Environment override: CODEX_PCT_TIER.
+# Supported values depend on the installed status helper.
+pct_tier = "plus"

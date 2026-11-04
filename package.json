@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "scripts": {
+    "presentation:install": "skills/presentation/scripts/toolchain install",
+    "presentation:probe": "skills/presentation/scripts/toolchain probe",
+    "presentation:offline-diagnose": "skills/presentation/scripts/toolchain diagnose"
+  },
+  "devDependencies": {
+    "jscpd": "^4.3.0",
+    "knip": "^5.88.1",
+    "markdownlint-cli2": "^0.23.2"
+  }
+}

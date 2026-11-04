@@ -1,0 +1,40 @@
+# Ruff config for this skill's scripts ONLY.
+#
+# The analysis scripts here are one vendored unit shared byte-for-byte between the
+# canonical repo and every consumer, and they were authored at line-length 120. A
+# repo whose own default is 88 has its `ruff-format` hook silently rewrap all six
+# Python scripts on the first commit -- all six have lines between 89 and 117
+# characters -- which breaks the one property that makes the two copies auditable
+# against each other: that they are byte-identical. A drift check against a
+# reformatted copy can only compare behaviour, never content.
+#
+# Ruff resolves configuration hierarchically -- the closest ruff.toml or
+# pyproject.toml in a file's ancestor directories wins -- so this governs this
+# directory alone and changes nothing else in either repo. Verified both
+# directions: with this file the scripts pass `ruff format --check`; with
+# line-length dropped to 88 they fail.
+#
+# The precedent for scoping lint config to vendored code rather than reformatting
+# it is the general rule that template-managed and vendored files are not linted by
+# the consuming repo.
+#
+# Do NOT widen this to the rest of the repo, and do not edit the scripts to fit 88.
+# Reformatting them here forks them from the copy that produced every committed
+# analysis corpus.
+line-length = 120
+
+# The scripts' own floor (their requires-python is >=3.11). Without this, ruff infers the
+# target from the nearest pyproject.toml's requires-python, so a consumer on >=3.14 has
+# its formatter rewrite `except (A, B):` into the 3.14-only `except A, B:` -- forking the
+# copy from this one and breaking it on every older interpreter.
+target-version = "py311"
+
+[lint]
+# Keeps the `# noqa: S603` directive in recording_integrity.py alive as a directive
+# rather than as dead text. S603 (subprocess call, untrusted input) is enabled in the
+# consumer repo that also carries these scripts, where the directive is load-bearing;
+# it is not enabled here, so without this entry RUF100 reports the same directive as
+# an unused noqa and `ruff check --fix` DELETES it -- silently breaking the consumer's
+# gate from the canonical copy. `external` is exactly the setting for "preserve noqa
+# for codes this configuration does not enable".
+external = ["S603"]

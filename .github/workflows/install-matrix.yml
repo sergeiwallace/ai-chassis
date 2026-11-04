@@ -1,0 +1,64 @@
+name: Install matrix
+
+# GitHub Actions CI is retired; see docs/procedures/github-actions-retirement.md.
+on:
+  workflow_dispatch:
+
+jobs:
+  supported-install:
+    name: ${{ matrix.environment }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - environment: macOS
+            runner: macos-latest
+          - environment: Linux
+            runner: ubuntu-latest
+          # GitHub-hosted runners provide no real WSL runtime -- this job runs on the
+          # same ubuntu-latest image as Linux above. It exists to make the WSL-vs-Linux
+          # distinction visible in the CI matrix and run the identical suite a second
+          # time as a smoke check; the actual WSL-detection LOGIC (the "microsoft" /proc
+          # /version marker) is proven by tests/test_platform_detection.py's injected
+          # proc_version fakes, which require no real WSL runtime to exercise. Do not
+          # read this job's runner type as literal WSL coverage.
+          - environment: WSL (detection-logic verification)
+            runner: ubuntu-latest
+          - environment: Git Bash
+            runner: windows-latest
+            mssystem: MINGW64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - uses: astral-sh/setup-uv@v4
+      - name: Install dependencies
+        shell: bash
+        run: uv sync --group dev
+      - name: Clean install, upgrade, and rollback coverage
+        shell: bash
+        env:
+          MSYSTEM: ${{ matrix.mssystem }}
+        run: bash scripts/test_private_ci_package_lifecycle.sh
+
+      - name: Platform detection and rollback behavior
+        shell: bash
+        env:
+          MSYSTEM: ${{ matrix.mssystem }}
+        run: uv run pytest -q tests/test_platform_detection.py tests/test_wsl_boundary.py tests/test_rollback.py
+
+  powershell-experimental:
+    name: Native PowerShell (experimental)
+    runs-on: windows-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - uses: astral-sh/setup-uv@v4
+      - name: Experimental bootstrap
+        shell: pwsh
+        run: ./install.ps1 --help

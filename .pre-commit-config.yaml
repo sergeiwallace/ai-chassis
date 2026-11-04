@@ -1,0 +1,258 @@
+---
+# Pre-commit framework config (ISSUE-REF — adopted Option 1c Round 1, 2026-04-23).
+# Runs on every `git commit` (pre-commit stage) and `git push` (pre-push stage).
+#
+# Install: `pre-commit install --install-hooks --hook-type pre-commit --hook-type commit-msg --hook-type pre-push`
+# (Auto-run by copier `_tasks` on copy + update.)
+#
+# Update hook pins: `pre-commit autoupdate` (quarterly — see D-02 in
+# docs/plans/pre-commit-linting-expansion.md).
+#
+# Hook overrides require explicit authorization under local policy.
+
+default_stages: [pre-commit]
+
+# Beads (bd) manages everything under .beads/ — machine-generated Dolt config +
+# JSONL exports + audit log. They must NOT be processed by the file-formatting
+# hooks (check-json/check-yaml/end-of-file-fixer/trailing-whitespace): bd's output
+# doesn't satisfy them, and the pre-push stash/auto-fix/restore dance conflicts on
+# the churning store files (ISSUE-REF #73). Global-exclude the whole dir. Committed
+# .beads/issues.jsonl, in a repo that still tracks that mirror, is version-controlled but not linted.
+exclude: ^\.beads/
+
+repos:
+  # ── File-level sanity checks (D-03 Option 3c: maximal bundle) ────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+        exclude: \.jinja$
+      - id: check-json
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+        # A byte-exact fixture (a captured raw diff/patch, a golden output) can carry a
+        # semantically meaningful trailing space (a unified-diff blank-context line is a
+        # literal single space) or an intentional final-newline shape. Auto-fixing it
+        # silently invalidates the fixture without touching the test that depends on it
+        # (ISSUE-REF: this exact corruption broke a relay-diff fixture's hunk parsing).
+        #
+        # docs/asks/ is the same shape and fails the same way. A Founding Ask Record
+        # stores a human's exact words and binds them with a body_sha256, and the
+        # founding-ask reference commits to a content_sha256 and blob_oid over the whole
+        # file. Normalizing one byte leaves a record that still reads correctly while no
+        # longer hashing to its own recorded digest, so the next append is refused
+        # ("existing FAR entry body_sha256 mismatch") and every Tier 2/3 launch that
+        # resolves the root fails validation. Verbatim means verbatim.
+        #
+        # docs/prompts/truncate-check/checks/ can hold a raw prompt copy, which a check doc
+        # compares byte for byte (#4300 added one through the web UI, which runs no hook;
+        # every later push whose range carried it was refused while the hook rewrote it).
+        # Blocks scripts/truncate_check.py renders survive the fixers anyway, so the
+        # exclusion costs those nothing.
+        exclude: ^(tests?/fixtures/|docs/asks/|docs/prompts/truncate-check/checks/)
+      - id: trailing-whitespace
+        # docs/held/ items are verbatim captures too (README § Holding at emit time): the
+        # hook stripped `superseded by \n` and refused `held_cli.py answer`'s own commit
+        # (ISSUE-REF). docs/held/.markdownlint.yaml turns MD009 off for the same reason.
+        # skills/archify/ is a vendored upstream build artifact kept byte-identical to its
+        # release (skills/archify/vendor-manifest.json), so a whitespace fix would fork it.
+        exclude: ^(tests?/fixtures/|docs/asks/|docs/held/|docs/prompts/truncate-check/checks/|skills/archify/)
+      - id: check-added-large-files
+        # uv.lock is an expected, deterministic large generated artifact (ISSUE-REF
+        # T-2.2 requires tracking it fleet-wide) -- exempt it rather than raising the
+        # ceiling for every other file type.
+        args: [--maxkb=500]
+        # Vendored third-party skill runtime assets (ISSUE-REF; the generated validator
+        # bundle grew past 500KB with archify 3.2.0); load-bearing,
+        # not a check-in-by-accident large file. Archify-generated architecture
+        # diagrams under any doc-kind directory are the same shape (ISSUE-REF):
+        # real, useful showcase-quality output, not an accidental large blob.
+        # The presentation kit's bundled OFL faces (ISSUE-REF) are upstream font files kept
+        # byte-identical, so a deck renders in the face lint measured on any machine.
+        exclude: ^(skills/archify/assets/template\.html|skills/presentation/themes/fonts/.*\.ttf|skills/archify/renderers/shared/generated-validators\.mjs|docs/(designs|plans|audits|research|analysis)/.*\.html)$|(^|/)uv\.lock$
+      - id: detect-private-key
+        exclude: ^(tests?/fixtures/|docs/examples?/)
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      # Replaces the legacy .githooks/pre-commit sh_mode_fail check (ISSUE-REF):
+      # a .sh committed as 100644 causes a spurious mode-change diff because
+      # install.sh chmod +x's every hook on install.
+      #
+      # Scope widened to the stock all-shebang-files default (ISSUE-REF). The
+      # earlier `files: \.sh$` narrowing excluded every EXTENSIONLESS script,
+      # which is exactly the shape of .claude/bin/* — so bd-new and bdx shipped
+      # as 100644 and both died with "Permission denied" the moment a $HOME
+      # rebuild re-materialized them, while this gate reported "no files to
+      # check". A gate that cannot fire on the case it is named for is worse
+      # than no gate. Verified with a positive control: an extensionless
+      # shebang file staged 100644 was Skipped under the old scope and is
+      # rejected under this one.
+      #
+      # The narrowing's original justification (~13 pre-existing unrelated .py
+      # mode issues) no longer applies — a full --all-files sweep now flags a
+      # single .py, fixed in the same commit as this change. Two .sh files are
+      # knowingly left at 100644 because staging them triggers 41 pre-existing
+      # shellcheck warnings, which do not belong in a mode-fix commit; tracked
+      # in ISSUE-REF.
+      - id: check-shebang-scripts-are-executable
+        # Upstream archify ships these node scripts 100644 and runs them as `node <file>`.
+        exclude: ^skills/archify/
+
+  # ── Markdown lint ────────────────────────────────────────────────────────
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.23.0
+    hooks:
+      - id: markdownlint-cli2
+        args: [--fix]
+        # docs/presentation/decks/**/slides.md: Slidev's canonical multi-slide format is
+        # legitimately one H1 per slide (23 top-level headings in one file for a 23-slide
+        # deck), which MD025/single-title flags as a doc error. Not a doc error here.
+        # The two docs/meetings templates are a PORT, held byte-identical to their
+        # maintained originals in the downstream project repo, and
+        # `meeting-analyze check-drift` compares the two copies by sha256.
+        #
+        # This one is easy to miss and was measured, not anticipated: `--fix`
+        # SILENTLY repaired MD012 (two consecutive blank lines) in
+        # standups/TEMPLATE.md and still reported "Summary: 0 error(s)", so the
+        # hook passes while the port forks. A one-blank-line divergence would then
+        # show as DRIFTED forever, on a repo this side does not write. Both
+        # templates are excluded, not just the one that tripped: the other differs
+        # only in not having a lintable defect yet.
+        #
+        # docs/exports/ holds verbatim ChatGPT conversation exports, which use one
+        # H1 per response by construction; they are source records, not authored docs.
+        #
+        # docs/meetings/README.md is deliberately NOT excluded -- it is native
+        # ai-harness prose, not a port, and it lints clean.
+        # skills/archify/ is the vendored upstream release, byte-identical to its archify.zip
+        # (skills/archify/vendor-manifest.json): --fix would fork it exactly as above.
+        exclude: ^(\.claude/|\.githooks/|node_modules/|docs/research/|docs/scratch/|docs/exports/|skills/archify/)|^docs/meetings/(TEMPLATE|standups/TEMPLATE)\.md$|^docs/presentation/decks/.*/slides\.md$
+
+
+  # ── Python: ruff (check --fix + format) ──────────────────────────────────
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.0
+    hooks:
+      # Exclude .githooks/ — those .py files are vendored from project-template and
+      # are re-linted at each repo's own line-length (88/100/120/150 vary across the
+      # fleet), so a template that ships them at any single width churns on every
+      # copier update. Vendored/template-managed files should not be linted by the
+      # consuming repo; edit them upstream in project-template. (ISSUE-REF)
+      #
+      # packages/ is deliberately NOT excluded. An earlier pass excluded it so the
+      # standalone projects under it would not inherit the root's aggressive ratchet
+      # (C901, PLR), but excluding is a coverage REDUCTION: it left packages/ linted
+      # by nothing the gate runs, and the per-package `[tool.ruff.lint]` sections it
+      # added were only reachable by a human running ruff from inside the package.
+      #
+      # No exclusion is needed, because ruff resolves configuration PER FILE from the
+      # nearest ancestor pyproject.toml carrying a `[tool.ruff]` table -- and
+      # `[tool.ruff.lint]` alone is enough to make that file the config root. So each
+      # package's own narrower `select` governs its files even when ruff is invoked
+      # from the repo root with root-relative filenames, which is exactly how
+      # pre-commit invokes it.
+      #
+      # MEASURED on ruff 0.16.0, two-sided, same 48 files and the same gate-shaped
+      # argv (explicit filename, --force-exclude --ignore ERA,ARG,B):
+      #   * default (hierarchical): 0 findings over packages/
+      #   * --config pyproject.toml (forces the ROOT config): 71 findings, every one
+      #     from a family only the root selects (PLR/C901/ARG/B/ERA)
+      # Discriminator file packages/fleet-testkit/src/fleet_testkit/identity.py: 4
+      # findings (PLR0911 x2, PLR2004, PLR1714) under the forced root config, 0 under
+      # per-file resolution.
+      #
+      # The correctness floor is genuinely enforced, not merely quiet: injecting
+      # `import collections` + a reference to an undefined name into that same file
+      # reported F401, F821 and E402 and exited 1. `ruff format --check packages/`
+      # was already clean (47 files), so un-excluding ruff-format churns nothing.
+      # Enforced by tests/test_gate_coverage_consistency.py. (ISSUE-REF / G114)
+      - id: ruff-check
+        # Correctness plus D-15's deterministic complexity exception are hard.
+        #
+        # ERA, ARG and B stay ignored HERE and advisory in `ruff-advisory` below, but they ARE
+        # blocking at push -- that asymmetry is deliberate and ratified, not an oversight, so the
+        # promotion record this comment used to defer to is written out here.
+        #
+        # WHERE THE BLOCK ACTUALLY COMES FROM -- not from the pytest test, which is what #1614
+        # claimed and what an earlier version of this comment repeated. MEASURED 2026-09-27 with a
+        # planted ERA001+ARG001, both push-stage routes let it through:
+        #   * `quality-contract.toml` `[analyzers.ruff]` declared commented_code/unused_arguments/
+        #     bugbear as `advisory`, so the push-stage code-quality gate printed
+        #     `"verdict": "advisory"` and exited 0;
+        #   * `tests/test_format_gate_scope.py::test_given_the_repo_when_the_unscoped_lint_check_runs_then_it_passes`
+        #     does assert whole-tree `ruff check .`, but `test-gate`'s Python arm is
+        #     COLLECTION-ONLY, so its body never runs at push (its sentinel records
+        #     `<sha> collection-only test-gate`).
+        # The enforcing arm is therefore `quality-contract.toml`, whose three modes are now `hard`;
+        # with that flipped the same plant yields `"verdict": "block"`, exit 1. The pytest test
+        # still earns its keep, but as the FULL-SUITE (step-13) gate, not the push gate.
+        #
+        # WHY COMMIT STAYS LOOSER. The pytest assertion is whole-tree and pre-commit is
+        # per-staged-path: failing a commit for findings in files it does not touch would make any
+        # commit in a tree with pre-existing slop unlandable. The push-stage gate is differential by
+        # changed path, so it can be `hard` without that problem. Commit keeps the correctness
+        # floor; push adds the slop families.
+        #
+        # RATIFIED per repo class (Example User, 2026-09-27), because the two classes have different
+        # owners: BLOCKING in the personal repos (this one), ADVISORY in
+        # example-project, which is team-shared and must not be gated on our own
+        # slop preferences. Measured: only ai-harness selects ERA or ARG at all --
+        # `lint/ruff-base.toml`, the fleet baseline the other repos extend, selects E4/E7/E9/F/I --
+        # so this policy is in practice about this repo. In the example-client-host repo `B` IS selected and its
+        # `.githooks/pre-commit` blocks on it, which is the one place the ratified split is not yet
+        # honoured; surfaced for a decision rather than changed from here.
+        #
+        # ESCAPE HATCHES, both intentionally kept: `# noqa` on the line, or a per-file-ignores
+        # entry in pyproject.toml with the reason beside it (this repo's own convention,
+        # ~290 entries deep). Reversible by putting the three `quality-contract.toml` modes back to
+        # `advisory`; the whole tree was clean when this landed, so nothing was grandfathered.
+        args: [--fix, --ignore, "ERA,ARG,B"]
+        exclude: ^\.githooks/
+      - id: ruff-format
+        exclude: ^\.githooks/
+
+
+  # ── Shell: shellcheck (warning+ only — suppress info/style noise) ───────
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        args: [--severity=warning]
+        # The two meeting-analysis dependency scripts are a PORT, held
+        # byte-identical to their maintained originals in the downstream project
+        # repo. `meeting-analyze check-drift` compares the
+        # two copies by sha256, so a lint fix applied on this side alone reports
+        # DRIFTED on day one and hands a reconciliation obligation to a repo this
+        # side does not write. Same reasoning, and the same wording, as the
+        # ruff-check/ruff-format exclusion of `.githooks/` above (ISSUE-REF):
+        # vendored/template-managed files should not be linted by the consuming
+        # repo — edit them upstream.
+        #
+        # The finding this defers is REAL and specific, not hypothetical noise, so
+        # it is named here rather than left for someone to rediscover:
+        # install_deps.sh:15 declares `PY_PKGS=(faster-whisper pillow imagehash
+        # numpy)` and never references it — the list that actually drives the
+        # install is duplicated inside the heredoc's `mods` dict a few lines down,
+        # so the two can silently disagree about which packages are required.
+        # SC2034, severity warning. Filed for the upstream fix as ISSUE-REF
+        # (ISSUE-REF); delete this exclude when the
+        # upstream copy is fixed and re-synced.
+        #
+        # Precedent in this repo for shellcheck warnings being deferred rather than
+        # fixed inside an unrelated change: the check-shebang-scripts-are-executable
+        # note above leaves two .sh files at 100644 because staging them triggers 41
+        # pre-existing shellcheck warnings (ISSUE-REF).
+        exclude: ^packages/meeting-analysis/src/meeting_analyze/deps/
+
+  # ── Public: staged secret scan ──────────────────────────────────────────────
+  - repo: local
+    hooks:
+      - id: gitleaks-staged
+        name: gitleaks staged secret and PII scan
+        entry: >-
+          bash -c 'if command -v gitleaks >/dev/null 2>&1; then
+          gitleaks protect --staged --config .gitleaks.toml --redact=100;
+          else echo "[skip] gitleaks not installed -- staged-secret scan skipped";
+          fi'
+        language: system
+        pass_filenames: false

@@ -1,0 +1,15 @@
+pair,order,before_ms,after_ms
+1,before-first,12924,3010
+2,after-first,3294,2155
+3,before-first,3476,2663
+4,after-first,3628,2654
+5,before-first,3435,1915
+6,after-first,3551,2011
+7,before-first,3494,2221
+8,after-first,3823,2579
+9,before-first,6473,2668
+10,after-first,5850,6355
+11,before-first,4721,2204
+12,after-first,5532,4792
+13,before-first,5870,2131
+14,after-first,3262,3215

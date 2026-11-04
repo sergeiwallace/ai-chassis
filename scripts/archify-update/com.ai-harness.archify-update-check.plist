@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.ai-harness.archify-update-check</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__AI_HARNESS_ROOT__/.venv/bin/python3</string>
+    <string>__AI_HARNESS_ROOT__/scripts/archify-update/check_archify_update.py</string>
+  </array>
+  <key>StartInterval</key>
+  <integer>604800</integer>
+  <key>StandardOutPath</key>
+  <string>__AI_HARNESS_STATE_DIR__/launchd.log</string>
+  <key>StandardErrorPath</key>
+  <string>__AI_HARNESS_STATE_DIR__/launchd.log</string>
+</dict>
+</plist>

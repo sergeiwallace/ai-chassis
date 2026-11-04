@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Install or remove the template without auto-loading it during repository install.
+set -euo pipefail
+
+repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+dest="$HOME/Library/LaunchAgents/com.ai-harness.job-supervisor.plist"
+case "${1:-}" in
+  install)
+    mkdir -p "$HOME/Library/LaunchAgents"
+    # launchd fails the spawn rather than create the log path's parent (ISSUE-REF).
+    state_root="${XDG_STATE_HOME:-$HOME/.local/state}"
+    mkdir -p "$state_root/ai-harness/launchd"
+    sed -e "s|__AI_HARNESS_ROOT__|$repo|g" -e "s|__AI_HARNESS_STATE__|$state_root|g" \
+      "$repo/launchd/com.ai-harness.job-supervisor.plist" > "$dest"
+    chmod 600 "$dest"
+    echo "Installed $dest. Load it manually with: launchctl bootstrap gui/$(id -u) $dest"
+    ;;
+  uninstall)
+    rm -f "$dest"
+    echo "Removed $dest (unload it first if currently loaded)."
+    ;;
+  *)
+    echo "usage: $(basename "$0") install|uninstall" >&2
+    exit 2
+    ;;
+esac

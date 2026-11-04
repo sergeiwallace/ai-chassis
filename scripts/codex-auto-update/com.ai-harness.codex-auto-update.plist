@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.ai-harness.codex-auto-update</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>__HOME__/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__AI_HARNESS_ROOT__/.venv/bin/python3</string>
+    <string>__AI_HARNESS_ROOT__/scripts/codex-auto-update/codex_auto_update.py</string>
+  </array>
+  <key>StartInterval</key>
+  <integer>86400</integer>
+  <key>StandardOutPath</key>
+  <string>__AI_HARNESS_STATE_DIR__/launchd.log</string>
+  <key>StandardErrorPath</key>
+  <string>__AI_HARNESS_STATE_DIR__/launchd.log</string>
+</dict>
+</plist>

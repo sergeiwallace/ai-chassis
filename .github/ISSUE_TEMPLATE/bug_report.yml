@@ -1,0 +1,84 @@
+name: Bug report
+description: Report one reproducible ai-harness defect without secrets or private data.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. For security vulnerabilities, credentials, private source,
+        or customer data, do not use this public form.
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched for duplicates and this report covers one bug.
+          required: true
+        - label: I removed secrets, private code, session IDs, account/org identifiers, and private telemetry.
+          required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: State the affected component, trigger, and failure.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Numbered steps from the smallest relevant starting state.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and impact
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: ai-harness version or commit
+      description: Include the relevant tool/version when the defect is outside ai-harness itself.
+      placeholder: e.g. 1.2.3 or abc1234
+    validations:
+      required: true
+  - type: input
+    id: os-version
+    attributes:
+      label: Operating system and exact version
+      description: Include release plus build/kernel and architecture when available.
+      placeholder: e.g. macOS 26.5.2 (build 25F84), Darwin 25.5.0, arm64
+    validations:
+      required: true
+  - type: input
+    id: runtime
+    attributes:
+      label: Runtime context
+      description: Terminal, shell, SSH/tmux/IDE host, and fresh/resumed state as relevant.
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Sanitized diagnostics
+      description: Include only relevant, redacted logs, configs, or tool-manifest differences. Never paste a full environment dump.
+  - type: textarea
+    id: controls
+    attributes:
+      label: Regression and controls
+      description: Fresh-process result, last known good version, and relevant controls tried.
+  - type: textarea
+    id: related
+    attributes:
+      label: Related public reports
+      description: Public issue, pull request, or comment URLs only. Do not mention private support or feedback submissions.

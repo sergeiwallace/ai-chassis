@@ -1,0 +1,12 @@
+[Unit]
+Description=ai-harness stale temporary-root and cache cleanup
+
+[Service]
+Type=oneshot
+SuccessExitStatus=0
+ExecStart=/usr/bin/env python3 %h/projects/ai-harness/scripts/reap_test_git_artifacts.py --min-age-hours 0.5
+ExecStart=/usr/bin/env python3 %h/projects/ai-harness/scripts/reap_stale_tmp_caches.py --min-age-minutes 30
+PrivateTmp=false
+ProtectSystem=full
+ProtectHome=read-only
+NoNewPrivileges=true

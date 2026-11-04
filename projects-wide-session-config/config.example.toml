@@ -1,0 +1,63 @@
+# Copy to ai-harness.toml and choose the modules and profiles to enable.
+config_schema_version = 1
+
+[core]
+source = "registry"
+channel = "stable"
+
+[site]
+# Agent enablement. This is the SITE DEFAULT; a machine may override it below.
+# Known agents: "claude" (CLAUDE.<machine>.md), "gemini" (GEMINI.<machine>.md).
+# An agent named here that the renderer does not know fails the compile closed,
+# naming the agent and this key, rather than being silently skipped.
+#
+# Gemini is DISABLED fleet-wide (ISSUE-REF D-10, 2026-10-07: "we don't use gemini
+# anymore"). Nothing Gemini is deleted -- its source modules and procedure docs
+# live under archive/ -- so re-enabling it is this list plus un-archiving those
+# modules. Enabling it here with its modules still archived fails the compile on
+# the missing module, which is the intended loud failure.
+agents = ["claude"]
+machines = ["mac", "linux"]
+
+# Per-machine agent enablement (ISSUE-REF D-11). A [machine.<name>] table overrides
+# [site] agents for that machine only; a machine with no table inherits the site
+# list. This is the key that carries per-machine enablement, resolving the plan's
+# Open Question 2 in favour of a machine override over a per-machine [site] agents:
+#   - The layer already exists. render.py's _setting_layers already ranks a
+#     "private machine profile" layer above "private site config", and
+#     explain_config_value already takes a machine; only _schema1_plan was not
+#     passing one. Making [site] agents itself per-machine would have meant a new
+#     shape for a resolution order the library already implements.
+#   - It keeps one default in one place. The site list stays the fleet answer and a
+#     machine states only its difference, so turning Gemini back on everywhere is
+#     one edit rather than one per machine.
+#   - It generalises. Any future per-machine setting uses the same table and the
+#     same `explain` output, instead of a second mechanism per key.
+# Note the table is [machine.<name>], SINGULAR -- it is not [machines.<name>], and
+# machine DETECTION is the same table's platform and identity-check keys (schema 3).
+#
+# To try a future Gemini on one machine only (its modules must be un-archived first):
+# [machine.mac]
+# agents = ["claude", "gemini"]
+
+[modules]
+site_base = []
+
+[modules.delta]
+claude = []
+
+[modules.overlay.claude]
+mac = []
+linux = []
+
+[environment]
+inputs = []
+
+[limits]
+global_lines = 400
+project_lines = 120
+combined_lines = 500
+global_chars = 40000
+project_chars = 40000
+combined_chars = 60000
+warn_threshold = 0.90

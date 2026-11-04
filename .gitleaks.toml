@@ -1,0 +1,25 @@
+title = "Public example indicator policy"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "example-domain"
+description = "Detect a placeholder organization domain in test fixtures."
+regex = '''(?i)example-corp\.example'''
+
+[[rules]]
+id = "example-home-path"
+description = "Detect a placeholder local-path marker."
+regex = '''example-user-home/'''
+
+[allowlist]
+description = "Non-secret content exclusions"
+regexes = [
+  '''^[0-9a-f]{64}$''',
+]
+# export-provenance.json's "files" map is filename -> sha256 content hash for
+# every shipped file; those hex digests trip the generic-api-key entropy rule
+# but are not secrets. Verified 2026-08-20 via a real gitleaks scan against a
+# freshly built export candidate: two findings, both this
+# pattern, zero real leaks.

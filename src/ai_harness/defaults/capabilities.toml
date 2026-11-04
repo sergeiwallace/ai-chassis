@@ -1,0 +1,33 @@
+# Core-owned optional command-line integrations.  Private configuration selects
+# their mode; it never supplies executable paths or remediation instructions.
+
+[capabilities.aido]
+provider = "aido"
+remediation = "uv tool install aido"
+
+[capabilities.ai-core]
+provider = "core"
+remediation = "uv tool install ai-core"
+
+[capabilities.agent-browser]
+provider = "agent-browser"
+remediation = "npm install --global agent-browser"
+
+[capabilities.bd]
+provider = "bd"
+remediation = "uv tool install beads"
+
+# RETAINED through the Gemini retirement (ISSUE-REF D-10, 2026-10-07), deliberately.
+#
+# Removing this row made `apply` refuse with "unknown capability ID(s): gemini-cli"
+# and broke IN-40 of docs/designs/archive/SUPERSEDED-ai-harness-open-source-runtime-composition.md,
+# whose whole subject is declaring this capability. Retiring the row properly means
+# rewriting a published requirement-inventory row, which is a design decision rather
+# than part of this retirement.
+#
+# Inert as it stands: the registry PROBES AND DECLARES only, it never installs, and
+# nothing requests this provider now that install.sh's Step 11 is gated on agent
+# enablement. Remove it together with IN-40.
+[capabilities.gemini-cli]
+provider = "gemini"
+remediation = "npm install --global @google/gemini-cli"

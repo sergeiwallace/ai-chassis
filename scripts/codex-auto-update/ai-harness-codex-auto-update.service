@@ -1,0 +1,6 @@
+[Unit]
+Description=Update Codex CLI when no Codex dispatch is active
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/env python3 __AI_HARNESS_ROOT__/scripts/codex-auto-update/codex_auto_update.py

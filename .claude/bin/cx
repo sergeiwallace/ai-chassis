@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Portable Codex-exec wrapper.
+#
+# The role names are a stable interface for harness automation. Role-specific
+# model, sandbox, and network policy belongs to the recipient's local Codex
+# configuration; this public wrapper never embeds account, provider, host, or
+# credential routing.
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: cx <role> [codex exec options] <prompt>
+
+Roles: implement, implement-network, review, research, audit, mechanical,
+       verify-commit, coordinator, ask
+
+`cx` runs Codex non-interactively with a clean, ephemeral session. Configure
+role policy in your local Codex configuration before using a role that needs
+write or network access.
+EOF
+}
+
+[[ $# -gt 0 ]] || { usage >&2; exit 2; }
+role=$1
+shift
+case "$role" in
+  implement|implement-network|review|research|audit|mechanical|verify-commit|coordinator|ask) ;;
+  -h|--help|help) usage; exit 0 ;;
+  *) echo "cx: unsupported role: $role" >&2; usage >&2; exit 2 ;;
+esac
+
+command -v codex >/dev/null 2>&1 || {
+  echo "cx: Codex CLI is not installed or is not on PATH" >&2
+  exit 127
+}
+
+# A recipient may opt into a local profile by setting CX_PROFILE. Do not infer
+# providers or credentials from the host environment.
+args=(exec --skip-git-repo-check --color never --ephemeral)
+if [[ -n "${CX_PROFILE:-}" ]]; then
+  args+=(--profile "$CX_PROFILE")
+fi
+
+exec codex ${args[@]+"${args[@]}"} "$@"

@@ -1,0 +1,6 @@
+# Copy to quality-rollout.local.toml and declare the host identifiers accepted
+# by your rollout manifest. Platform defaults must also appear in allowed_hosts.
+[quality_rollout]
+allowed_hosts = ["developer-macos", "developer-windows", "linux-runner"]
+darwin_host = "developer-macos"
+windows_host = "developer-windows"

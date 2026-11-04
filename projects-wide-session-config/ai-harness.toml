@@ -1,0 +1,48 @@
+# Context compilation settings for ai-harness-lite.
+config_schema_version = 1
+
+[core]
+source = "registry"
+channel = "stable"
+
+[site]
+# Gemini is retired fleet-wide (ISSUE-REF D-10, owner 2026-10-07). Its source modules
+# and procedure docs are in archive/, not deleted, so re-enabling it means adding
+# "gemini" back here (or to one [machine.<name>] table, per D-11) AND un-archiving
+# modules/gemini-delta.md plus the per-machine overlay it needs. Enabling it without
+# un-archiving fails the compile on the missing module, which is deliberate.
+agents = ["claude"]
+machines = ["mac", "linux"]
+
+[overlay_aliases]
+
+[modules]
+site_base = []
+
+[modules.delta]
+claude = ["modules/claude-delta.md"]
+# The gemini delta and its per-machine overlays were archived with D-10 (2026-10-07):
+# archive/gemini-delta.md and archive/gemini-<machine>.md. Re-enabling Gemini means
+# restoring those modules and re-adding the tables that pointed at them; the archived
+# files are the record of what they contained.
+
+[modules.overlay.claude]
+mac = ["modules/claude-mac.md"]
+linux = ["modules/claude-linux.md"]
+
+[[modules.replace]]
+public_path = "defaults/agents-base.md"
+with = "modules/agents-base.md"
+replaces_version = "1"
+
+[environment]
+inputs = []
+
+[limits]
+global_lines = 400
+project_lines = 120
+combined_lines = 500
+global_chars = 40000
+project_chars = 40000
+combined_chars = 60000
+warn_threshold = 0.90

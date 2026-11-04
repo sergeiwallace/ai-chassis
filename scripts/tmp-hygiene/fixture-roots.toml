@@ -1,0 +1,21 @@
+# Temp-root families the collector may consider: pytest scratch roots and, since
+# D-13 of docs/designs/storage-auto-prune-circus.md, hand-run tool scratch such as
+# mmdc-render. This is an allowlist, never a general /tmp sweep. Every glob is one
+# or two relative path segments.
+
+[[roots]]
+glob = "ai-harness-pytest-runs/run-*"
+managed = true
+
+[[roots]]
+glob = "pytest-of-*/pytest-*"
+managed = false
+
+[[roots]]
+glob = "aido-pytest-*"
+managed = false
+
+# docs/procedures/mermaid-render-verify.md renders here; its `cd` keeps a live render alive.
+[[roots]]
+glob = "mmdc-render"
+managed = false

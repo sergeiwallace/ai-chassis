@@ -1,0 +1,31 @@
+* text=auto eol=lf
+
+# .beads/*.jsonl must never be three-way merged by git: git's text merge takes
+# the union of two line edits, and issues.jsonl is
+# NOT append-only -- records get rewritten in place. A line union therefore leaves
+# two lines for one id, and a last-wins reader can select the OLDER body. That
+# failure is invisible to every cheap check: measured on an enterprise workstation
+# 2026-08-18, an export whose id-set was a superset and whose line count had gone
+# UP still carried 66 records older than the committed file, and writing it would
+# have silently REOPENED 26 closed issues.
+#
+# The correct merge is per record on `updated_at`, which scripts/bd_jsonl_merge.py
+# already implements. Until that core is wired as a real merge driver (which needs
+# a %O/%A/%B adapter AND a gate asserting the driver is registered, because an
+# unregistered custom driver silently falls back to the line union this exists to
+# prevent), merge=binary is the fail-closed interim: git refuses to auto-merge a
+# two-sided change and leaves the path conflicted. Resolve it with the shipped
+# tool, never by hand-picking a side or hand-editing the JSONL. `--apply` is REQUIRED:
+# both subcommands default to report-only, so without it they print their verdict, write
+# nothing, and exit 0 -- and staging the untouched file then continuing the rebase commits
+# the conflict side DROPPED, with a clean exit status. Pinned by
+# tests/test_bd_jsonl_merge.py::test_given_the_documented_recipe_when_read_then_every_invocation_can_actually_write,
+# which derives the requirement from each subcommand's own --help rather than hardcoding it:
+#     python3 scripts/bd_jsonl_merge.py resolve --apply <repo> .beads/issues.jsonl
+#     python3 scripts/bd_jsonl_merge.py union   --apply <repo> .beads/interactions.jsonl
+# interactions.jsonl takes the `union` core because it IS append-only, and it is a
+# STORE rather than a mirror -- it cannot be regenerated from anything.
+# A one-sided change still merges cleanly, so this adds no false conflicts.
+# AD-8 in docs/analysis/concurrent-session-resource-contention.md.
+.beads/issues.jsonl merge=binary
+.beads/interactions.jsonl merge=binary

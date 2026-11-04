@@ -1,0 +1,21 @@
+# Tool config files — not content docs, skip markdown linting
+.claude/
+.githooks/
+
+# Slidev deck source: legitimately one H1 per slide (23 top-level headings in one file is
+# the correct Slidev multi-slide convention, not a doc error) -- MD025/single-title doesn't
+# apply to this domain-specific format.
+docs/presentation/decks/**/slides.md
+
+# Personal scratch notes: informal drafts (e.g. raw prompt text with "===" dividers that
+# markdownlint misreads as setext heading underlines) -- not a content doc, no format
+# convention applies.
+docs/scratch/**
+
+# Verbatim ChatGPT conversation exports: source records with one H1 per response, not
+# authored docs, so no ai-harness format convention applies.
+docs/exports/**
+
+# Vendored upstream archify release, kept byte-identical to its archify.zip build artifact
+# (skills/archify/vendor-manifest.json); its markdown follows upstream's conventions.
+skills/archify/**
