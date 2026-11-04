@@ -155,7 +155,7 @@ non-authoritative. If no root exists, state `UNVERIFIED` or `N/A` with reason.
        1. After the aido run completes (NOT mid-run), CC monitoring
           greps for verify_and_remediate_ambiguous telemetry events and
           surfaces the items via chat.
-       2. Example User reviews; resolved items are removed from this section
+       2. The maintainer reviews; resolved items are removed from this section
           (via CC Edit or a future `aido resolve-ambiguous` CLI command).
        3. Unresolved items remain across runs as a persistent TODO;
           new runs append new ambiguous items without disturbing prior

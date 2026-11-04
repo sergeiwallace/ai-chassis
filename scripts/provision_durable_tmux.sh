@@ -33,7 +33,7 @@ TMUX_TRANSPORT_FLOOR="3.7"
 # The source tarball to fall back to when the newest release cannot be looked up (no
 # network, rate limit, API change). This is a BUILD SOURCE, not a gate: it is the version
 # measured building clean in 6 s on Ubuntu 22.04 x86_64 on 2026-09-09. The lookup below
-# is what implements "always the latest tmux" (Example User, 2026-09-06); this is only the
+# is what implements "always the latest tmux" (the maintainer, 2026-09-06); this is only the
 # floor-satisfying answer for when the lookup fails.
 TMUX_FALLBACK_VERSION="3.7c"
 

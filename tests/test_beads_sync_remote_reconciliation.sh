@@ -37,8 +37,8 @@ echo "=== _sync_remote_from_git_url ==="
 # The scp-like form is what `git remote -v` prints for an SSH host alias, and is
 # the case the original code never handled: its single colon separates host from
 # path and must become a slash, or the result parses as a URL but points nowhere.
-expect_url "git@gh-ai-harness:Example User/ai-harness.git" \
-           "git+ssh://git@gh-ai-harness/Example User/ai-harness.git"
+expect_url "git@gh-ai-harness:example-org/ai-harness.git" \
+           "git+ssh://git@gh-ai-harness/example-org/ai-harness.git"
 expect_url "git@github.com:owner/repo.git" "git+ssh://git@github.com/owner/repo.git"
 expect_url "ssh://git@host/o/r.git"        "git+ssh://git@host/o/r.git"
 expect_url "https://github.com/o/r.git"    "git+https://github.com/o/r.git"

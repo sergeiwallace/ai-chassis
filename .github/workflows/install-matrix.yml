@@ -1,6 +1,6 @@
 name: Install matrix
 
-# GitHub Actions CI is retired; see docs/procedures/github-actions-retirement.md.
+# Run on demand: this workflow does not run on push or pull request.
 on:
   workflow_dispatch:
 

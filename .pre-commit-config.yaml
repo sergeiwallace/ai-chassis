@@ -193,7 +193,7 @@ repos:
         # changed path, so it can be `hard` without that problem. Commit keeps the correctness
         # floor; push adds the slop families.
         #
-        # RATIFIED per repo class (Example User, 2026-09-27), because the two classes have different
+        # RATIFIED per repo class (the maintainer, 2026-09-27), because the two classes have different
         # owners: BLOCKING in the personal repos (this one), ADVISORY in
         # example-project, which is team-shared and must not be gated on our own
         # slop preferences. Measured: only ai-harness selects ERA or ARG at all --

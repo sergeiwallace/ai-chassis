@@ -14,11 +14,11 @@ manifest: null
 ---
 
 <!-- Condition budget: <= 3900 maximum-count characters. The fenced block opens with the literal
-line `/goal` so the whole block pastes as one command (Example User, 2026-10-10, ISSUE-REF). A goal that
+line `/goal` so the whole block pastes as one command (the maintainer, 2026-10-10, ISSUE-REF). A goal that
 carries the fleet's standing in-progress default also runs `/exit-goal` once as the last instruction
 of its SUCCESS and BLOCKED branches; see docs/prompts/goal/README.md § Reusable templates. The
 `## Launch` section comes first, directly under the title, so the paste-ready prompt needs no
-scrolling (Example User, 2026-10-13, ISSUE-REF); render.py fills each section by its heading. -->
+scrolling (the maintainer, 2026-10-13, ISSUE-REF); render.py fills each section by its heading. -->
 
 ## Launch
 

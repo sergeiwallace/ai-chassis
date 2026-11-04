@@ -37,7 +37,7 @@ derived `score`.
 
 ## Review Queue
 
-Items requiring Example User's decision, review, or merge; ordered priority→impact.
+Items requiring the maintainer's decision, review, or merge; ordered priority→impact.
 
 (none yet)
 

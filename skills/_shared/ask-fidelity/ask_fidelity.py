@@ -721,7 +721,7 @@ def resolve_artifact_route(
 
 
 # ---------------------------------------------------------------------------
-# Held-output routing (issue-ref D-11, Example User's ask A003).
+# Held-output routing (issue-ref D-11, the maintainer's ask A003).
 #
 # A held item carries internal ids, so its store is ROUTED by the repo the held
 # work belongs to, through the same table, the same allowlist and the same

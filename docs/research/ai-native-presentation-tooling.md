@@ -550,7 +550,7 @@ implemented cleanly elsewhere.
 
 This refine answers two questions for version 2 of the presentation skill. Which of ai-harness's
 own visualization, graphics, browser and frontend elements should the skill use? And how should an
-agent test a reveal.js React deck as a live page rather than as isolated slide images? Example User
+agent test a reveal.js React deck as a live page rather than as isolated slide images? The maintainer
 settled the framework question himself on 2026-09-04 ("and no, use https://revealjs.com/react/"),
 after §7's recommendation to keep Slidev, so this section does not reopen it.
 
@@ -954,31 +954,31 @@ The winner may change the renderer for Friday, but not the content schema or QA 
 [^47]: Lu, Z., Zhao, W., Yang, J., Tang, Q., Zhang, L., & Zhang, Y. (2026). [ReDeck](https://arxiv.org/abs/2609.00194).
     arXiv. Verified accessible 2026-09-04. (Fresh preprint; render-feedback loop and reported
     evaluation gains.)
-[^48]: ai-harness. (2026). [skills/presentation/SKILL.md](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/presentation/SKILL.md).
+[^48]: ai-harness. (2026). [skills/presentation/SKILL.md](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/presentation/SKILL.md).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (Slidev-only skill contract.)
-[^49]: ai-harness. (2026). [docs/designs (presentation authoring skill design)](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/docs/designs).
+[^49]: ai-harness. (2026). [docs/designs (presentation authoring skill design)](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/docs/designs).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (D-14 records the unmerged multi-framework commit and the measurement that no ref to it is reachable from this host; the file at this commit predates that revision, which lands with this refine.)
-[^50]: ai-harness. (2026). [skills/presentation/scripts/critic](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/presentation/scripts/critic).
+[^50]: ai-harness. (2026). [skills/presentation/scripts/critic](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/presentation/scripts/critic).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (Attachments and critic prompt.)
-[^51]: ai-harness. (2026). [skills/presentation/scripts/inspect_dom.cjs](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/presentation/scripts/inspect_dom.cjs).
+[^51]: ai-harness. (2026). [skills/presentation/scripts/inspect_dom.cjs](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/presentation/scripts/inspect_dom.cjs).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (Lint DOM inspector.)
-[^52]: ai-harness. (2026). [skills/archify/bin/visual-check.mjs](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/archify/bin/visual-check.mjs).
+[^52]: ai-harness. (2026). [skills/archify/bin/visual-check.mjs](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/archify/bin/visual-check.mjs).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (Archify real-browser check and CDP capture; Archify tokens in skills/archify/explainer/reader.css.)
-[^53]: ai-harness. (2026). [skills/_shared/doc-render/README.md](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/_shared/doc-render/README.md).
+[^53]: ai-harness. (2026). [skills/_shared/doc-render/README.md](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/_shared/doc-render/README.md).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (Doc renderer outputs, screenshots and receipt; its pyproject.toml and css/harness-default.css.)
-[^54]: ai-harness. (2026). [skills/graphic/SKILL.md](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/graphic/SKILL.md).
+[^54]: ai-harness. (2026). [skills/graphic/SKILL.md](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/graphic/SKILL.md).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (Constrained SVG route.)
-[^55]: ai-harness. (2026). [docs/procedures/cdp-browser-automation.md](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/docs/procedures/cdp-browser-automation.md).
+[^55]: ai-harness. (2026). [docs/procedures/cdp-browser-automation.md](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/docs/procedures/cdp-browser-automation.md).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (Attached-browser CDP route and its constraints.)
-[^56]: ai-harness. (2026). [docs/procedures/diagram-render-and-vision-review.md](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/docs/procedures/diagram-render-and-vision-review.md).
+[^56]: ai-harness. (2026). [docs/procedures/diagram-render-and-vision-review.md](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/docs/procedures/diagram-render-and-vision-review.md).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (Measure-before-acting rule and non-author review.)
-[^57]: ai-harness. (2026). [docs/procedures/visual-doc-quality-rubric.md](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/docs/procedures/visual-doc-quality-rubric.md).
+[^57]: ai-harness. (2026). [docs/procedures/visual-doc-quality-rubric.md](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/docs/procedures/visual-doc-quality-rubric.md).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (Nine criteria and the recording table.)
-[^58]: ai-harness. (2026). [docs/presentation/decks/ai-harness-engineering/examples/AI_Harness_Engineering.html](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/docs/presentation/decks/ai-harness-engineering/examples/AI_Harness_Engineering.html).
+[^58]: ai-harness. (2026). [docs/presentation/decks/ai-harness-engineering/examples/AI_Harness_Engineering.html](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/docs/presentation/decks/ai-harness-engineering/examples/AI_Harness_Engineering.html).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (Reference deck.)
-[^59]: ai-harness. (2026). [skills/presentation/package.json](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/presentation/package.json).
+[^59]: ai-harness. (2026). [skills/presentation/package.json](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/skills/presentation/package.json).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (Pinned Slidev and Playwright versions.)
-[^60]: ai-harness. (2026). [docs/designs (presentation authoring skill design)](https://github.com/Example User/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/docs/designs).
+[^60]: ai-harness. (2026). [docs/designs (presentation authoring skill design)](https://github.com/example-org/ai-harness/blob/99f2d842f010ff473cd5998031272cdb5de701af/docs/designs).
     Private repository file at commit 99f2d842f01, read from a local checkout 2026-10-21. (Version 1 design and its implementation audit table; rubric items in skills/presentation/scripts/qa_support.py.)
 [^61]: npm. (2026). [@revealjs/react 0.2.1 registry record](https://registry.npmjs.org/@revealjs%2freact/0.2.1). Verified accessible (HTTP 200) 2026-10-21.
 [^62]: npm. (2026). [reveal.js 6.0.2 registry record](https://registry.npmjs.org/reveal.js/6.0.2). Verified accessible (HTTP 200) 2026-10-21.

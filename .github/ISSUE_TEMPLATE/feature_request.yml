@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest a new tool, skill, template or improvement
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do, and what gets in the way today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would like
+      description: Describe the change you have in mind. Alternatives you considered are welcome.
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: The release you use (see `VERSION`), your operating system, and your agent setup if it matters.
+    validations:
+      required: false

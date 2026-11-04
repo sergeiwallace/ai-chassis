@@ -765,7 +765,7 @@ def main() -> int:
 
     # A scoped run that selects NOTHING from a non-empty remote is a config error, not a
     # clean bill of health. Measured: authors=["Example User"] matched 0 of 87 refs on a
-    # remote where the address is "example-user" -- one dot, and the run reported
+    # remote where the address is "Example User" -- one dot, and the run reported
     # "0 analysed, 0 safe to delete" as though the repo were tidy. Fail loudly instead,
     # and name the emails actually present so the fix is obvious.
     if total and not branches:

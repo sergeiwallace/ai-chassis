@@ -3,10 +3,15 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
+import os
+import sys
 from typing import Any
 
 from ai_harness.job_supervisor import TERMINAL_STATES, Ledger
+
+ADMISSION_MODULE = "ai_harness.quota_traffic.admission"
 
 MAX_JOBS = 5
 MAX_DESCRIPTION_CHARS = 120
@@ -18,6 +23,27 @@ def _description(value: str) -> str:
     if len(compact) > MAX_DESCRIPTION_CHARS:
         return f"{compact[: MAX_DESCRIPTION_CHARS - 1]}…"
     return compact or "(no description)"
+
+
+def _load_admission() -> Any | None:
+    """Return the quota admission module, or None when this checkout does not include it.
+
+    The admission component is optional: a source extract may omit it. In that case every
+    pending job is admitted and one plain line says why, rather than failing silently.
+    """
+    try:
+        return importlib.import_module(ADMISSION_MODULE)
+    except ModuleNotFoundError as error:
+        # Whole module names only: a string prefix such as "ai_harness.quota" is a
+        # different module, and a typo there must stay loud.
+        if error.name in {ADMISSION_MODULE, ADMISSION_MODULE.rpartition(".")[0]}:
+            print(
+                "quota admission: component not included in this extract; "
+                "admitting all pending jobs",
+                file=sys.stderr,
+            )
+            return None
+        raise
 
 
 def _pending(ledger: Ledger) -> tuple[list[dict[str, str]], list[str]]:
@@ -50,7 +76,7 @@ def _pending(ledger: Ledger) -> tuple[list[dict[str, str]], list[str]]:
     return pending, watches
 
 
-def run(event_name: str, *, watch_paths: bool = False) -> int:
+def run(event_name: str, *, watch_paths: bool = False) -> int:  # noqa: C901 - watch setup and ordered admission before output
     """Emit advisory context from the ledger, never changing its state."""
     try:
         ledger = Ledger.from_environment()
@@ -69,19 +95,41 @@ def run(event_name: str, *, watch_paths: bool = False) -> int:
         output["watchPaths"] = [str(ledger.jobs_root), *watches[:MAX_WATCH_PATHS]]
     # A CwdChanged run only re-arms the watches a cd replaced (ISSUE-REF); the pending
     # summary belongs to the prompt and SessionStart pickups, not to every cd.
+    total = len(pending)
     if pending and event_name != "CwdChanged":
-        pending.sort(key=lambda record: record["finished_at"], reverse=True)
+        pending.sort(key=lambda record: (record["finished_at"], record["job_id"]))
+        try:
+            payload = json.load(sys.stdin)
+        except (OSError, ValueError):
+            payload = {}
+        session = str(
+            payload.get("session_id")
+            or os.environ.get("CLAUDE_SESSION_ID", "job-pickup")
+        )
+        admission = _load_admission()
+        admitted = []
+        for record in pending:
+            if admission is not None and not admission.check(
+                "job-pickup", session, record["job_id"]
+            ):
+                continue
+            if len(admitted) < MAX_JOBS:
+                admitted.append(record)
+                if admission is not None:
+                    admission.complete("job-pickup", session, record["job_id"])
+        pending = admitted
+    if pending and event_name != "CwdChanged":
         shown = pending[:MAX_JOBS]
         context = (
-            f"Local job supervisor: {len(pending)} terminal job result(s) await review. "
+            f"Local job supervisor: {total} terminal job result(s) await review. "
             "The ledger at ~/.claude/job-ledger/ is authoritative."
         )
         context += "\n" + "\n".join(
             f"- {record['job_id']} [{record['state']}] {record['description']}"
             for record in shown
         )
-        if len(pending) > MAX_JOBS:
-            context += f"\nShowing {MAX_JOBS} most recently finished jobs; inspect the ledger for the rest."
+        if total > MAX_JOBS:
+            context += f"\nShowing {MAX_JOBS} oldest finished jobs; inspect the ledger for the rest."
         output["additionalContext"] = context
     if len(output) == 1:
         return 0

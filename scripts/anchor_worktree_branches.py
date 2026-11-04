@@ -428,6 +428,8 @@ def _await_settled(psutil, victims: list, settled: set[str]) -> None:
 # never waits on or holds the host test lock for it (ISSUE-REF, after ISSUE-REF). A yielded
 # branch push falls through to the refs/backup/ anchor below, which runs no test body.
 _BACKUP_PUSH_ENV = {"AIH_BACKUP_PUSH": "1"}
+# The pre-commit id every fleet repo gives hooks/test-gate.sh.
+_TEST_GATE_HOOK_ID = "test-gate"
 
 
 def _git_push(
@@ -439,9 +441,31 @@ def _git_push(
     ``push.default`` or a branch's configured upstream -- an anchor must land on the ref
     this job chose, not wherever the repo's push configuration happens to point.
     """
-    args = ["push", remote, f"{source}:{dest}"]
+    if dest.startswith(f"{BACKUP_NAMESPACE}/"):
+        # ISSUE-REF: a refs/backup/ anchor publishes no branch, so hooks/test-gate.sh runs
+        # no body for it, but only where `.githooks/pre-push-chain` hands the gate git's full
+        # stdin. A consumer repo runs `test-gate` from pre-commit, which never sees that this
+        # push's one destination is an anchor, so the hook is skipped here by its id, on a
+        # push pinned to that one refspec. A refs/heads/ push keeps every gate.
+        args = [
+            "push",
+            "--no-follow-tags",
+            "--recurse-submodules=no",
+            remote,
+            f"{source}:{dest}",
+        ]
+        env = {**_BACKUP_PUSH_ENV, "SKIP": _skip_with(_TEST_GATE_HOOK_ID)}
+    else:
+        args = ["push", remote, f"{source}:{dest}"]
+        env = _BACKUP_PUSH_ENV
     _assert_push_is_safe(args)
-    return _git(args, cwd, timeout=timeout, extra_env=_BACKUP_PUSH_ENV)
+    return _git(args, cwd, timeout=timeout, extra_env=env)
+
+
+def _skip_with(hook_id: str) -> str:
+    """pre-commit's ``SKIP`` list with ``hook_id`` added to whatever the caller already set."""
+    inherited = os.environ.get("SKIP", "")
+    return f"{inherited},{hook_id}" if inherited else hook_id
 
 
 def backup_ref_for(branch: str, tip: str) -> str:

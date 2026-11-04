@@ -22,7 +22,7 @@ directories move separately during the coordinated cutover.
 | `feedback` | Review feedback, responses, and templates for recording it consistently. |
 | `git-review` | Repository and fleet Git-state reviews, including branches, worktrees, and cleanup assessments. |
 | `handoffs` | Context packages that transfer active work, decisions, and next steps between sessions or owners. |
-| `held` | Outputs Example User must act on (decisions, blockers, `/exit-goal` reports, fleet briefs), held in per-session files instead of chat; one directory per session, `open` → `answered` → retired. See `held/README.md`. |
+| `held` | Outputs the maintainer must act on (decisions, blockers, `/exit-goal` reports, fleet briefs), held in per-session files instead of chat; one directory per session, `open` → `answered` → retired. See `held/README.md`. |
 | `plans` | Implementation plans that translate approved work into phases, tasks, and validation criteria. |
 | `procedures` | Maintained operating procedures and authoring standards for harness development and documentation. |
 | `prompts` | Reusable prompt material and prompt-authoring guidance for harness workflows. |

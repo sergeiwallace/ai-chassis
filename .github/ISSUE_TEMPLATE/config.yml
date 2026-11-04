@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/sergeiwallace/ai-chassis/security/advisories/new
+    about: Use a private advisory. Please do not open a public issue for a vulnerability.
+  - name: Ask a question
+    url: https://github.com/sergeiwallace/ai-chassis/blob/main/SUPPORT.md
+    about: Read the support guide first, then open an issue with the question label.

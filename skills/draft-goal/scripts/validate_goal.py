@@ -1453,7 +1453,7 @@ def _replace_frontmatter(text: str, updates: dict[str, str]) -> str:
 def _is_registry_template(path: Path) -> bool:
     """A reviewed template under TEMPLATES_DIR, the set /start-goal digest-checks.
 
-    Example User ruled ISSUE-REF (b) on 2026-10-15: the judge cannot reach act mode, so a
+    The maintainer ruled ISSUE-REF (b) on 2026-10-15: the judge cannot reach act mode, so a
     template edit could never be re-stamped and /start-goal refused it. A template
     lands only through a reviewed PR; drafts and every other path keep the judge.
     """
