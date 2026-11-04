@@ -6,6 +6,23 @@ All notable changes to ai-chassis are recorded here. The format follows
 0, a minor release may add a subsystem and may change interfaces; a patch release only
 fixes defects and documentation.
 
+## [0.2.1]
+
+### Changed
+
+- The README now says what ai-chassis is for: one harness installed once per machine and
+  shared by many repositories and a fleet of agent sessions, not a tool for a single
+  repository. Its opening paragraph follows the repository description.
+- The README status no longer describes small releases. It describes what the releases
+  are: a private harness being refactored and cleaned up so that more of it can be
+  published as open source.
+
+### Added
+
+- A roadmap section in the README, with diagrams of the end state and of the stages, and
+  a list of the sub-systems that are coming and what each one is.
+- A diagram of how one harness serves several machines and repositories.
+
 ## [0.2.0] - 2026-11-04
 
 ### Breaking

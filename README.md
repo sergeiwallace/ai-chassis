@@ -6,23 +6,34 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
 [![Status: alpha](https://img.shields.io/badge/status-alpha-orange.svg)](#status)
 
-ai-chassis is a collection of reusable tools, skills, document templates and Python
-modules for working with AI coding agents. It comes from a working setup for running
-several coding agents in parallel on one codebase, and it covers the parts that sit
-around the model: agent skills, session and context configuration, git and worktree
-helpers, review and audit evidence, and the tests for them.
+ai-chassis is a modular, extensible AI agent harness and toolkit, built primarily around
+Claude Code and Codex. It collects reusable skills, plugins, context files, hooks,
+scripts, document templates and Python modules for long-running, autonomous,
+multi-agent work.
 
-> **Status.** This repository is a generalized extract that grows in small releases.
-> It installs an `ai-chassis` command and a Python package. It is not on PyPI yet. See
-> [Get started](#get-started), [Status](#status) and the [changelog](CHANGELOG.md).
+It comes from a working setup that runs a whole fleet of coding-agent sessions across
+many repositories and several machines at once, not one agent on one project. That is
+why it installs globally and into your projects directory instead of inside a single
+repository: one shared harness is composed into per-machine context and serves every
+repository the fleet works on. It covers the parts that sit around the model: agent
+skills, session and context configuration, git and worktree helpers, messaging between
+sessions, review and audit evidence, and the tests for them.
+
+> **Status.** ai-chassis is the open-source edition of a larger private harness. That
+> harness is being refactored and cleaned up in stages, and each release publishes more
+> of it. Today it installs an `ai-chassis` command and a Python package; it is not on
+> PyPI yet. See the [Roadmap](#roadmap) for what is coming, [Get started](#get-started),
+> [Status](#status) and the [changelog](CHANGELOG.md).
 
 ## Contents
 
 - [The idea](#the-idea)
+- [One harness, many repositories](#one-harness-many-repositories)
 - [What is inside](#what-is-inside)
 - [How the pieces fit](#how-the-pieces-fit)
 - [A session, start to finish](#a-session-start-to-finish)
 - [Skills in this release](#skills-in-this-release)
+- [Roadmap](#roadmap)
 - [Get started](#get-started)
 - [Status](#status)
 - [Provenance](#provenance)
@@ -31,10 +42,10 @@ helpers, review and audit evidence, and the tests for them.
 ## The idea
 
 A coding agent is only as reliable as the setup around it. Running several of them at
-once on one repository adds problems that a single chat window never has: two agents
-edit the same files, a session runs out of context and forgets what it was doing, a
-change lands without anyone checking it, and the shared instructions drift from
-machine to machine.
+once, across several repositories and machines, adds problems that a single chat window
+never has: two agents edit the same files, a session runs out of context and forgets
+what it was doing, a change lands without anyone checking it, one session cannot tell
+another what it found, and the shared instructions drift from machine to machine.
 
 ai-chassis collects the parts that answer those problems:
 
@@ -42,6 +53,29 @@ ai-chassis collects the parts that answer those problems:
 - A session writes down its state before its context resets, and the next one resumes from that record.
 - Instructions are composed from shared modules and per-machine overlays instead of copied by hand.
 - Changes carry evidence: a validated commit, a review, an audit, a passing test run.
+
+## One harness, many repositories
+
+ai-chassis is not scoped to one project. You install it once per machine, and it sits
+beside your repositories rather than inside any of them. The same skills, rules and
+lifecycle tools then apply to every repository you work on, and sessions on different
+machines can message each other.
+
+```mermaid
+flowchart LR
+    chassis["ai-chassis<br/>shared config, skills, hooks,<br/>session lifecycle, messaging"]
+    chassis --> a["Machine A<br/>agent sessions"]
+    chassis --> b["Machine B<br/>agent sessions"]
+    a --> r1["Repository 1<br/>one worktree per agent"]
+    a --> r2["Repository 2<br/>one worktree per agent"]
+    b --> r2
+    b --> r3["Repository 3<br/>one worktree per agent"]
+    a <-. "messages, wake events" .-> b
+```
+
+Each machine gets its own context files, composed from the shared modules plus a small
+overlay for that machine. Each agent works in its own git worktree of whichever
+repository it was given, so parallel work never collides, wherever it runs.
 
 ## What is inside
 
@@ -121,6 +155,92 @@ files only, and their `SKILL.md` files arrive in later releases.
 | `status-update` | Produces a structured status update from active work, tests and git. |
 | `usage-status` | Shows the current context window and quota usage. |
 
+## Roadmap
+
+ai-chassis is the open-source edition of a larger private harness. That harness was
+built for the maintainers' own fleet of agent sessions, so before a part of it can be
+published it is refactored and cleaned up: machine-specific settings become
+configuration, private names are replaced with neutral examples, and its tests are
+rewritten to use synthetic fixtures. Every stage then passes the release checks (build
+from an allowlist, scan for private material, independent audit, signed tag) before it
+is published.
+
+This roadmap is the plan, not a promise. Order and timing change as the clean-up goes,
+and the [changelog](CHANGELOG.md) records what each release actually contains.
+
+### The end state
+
+```mermaid
+flowchart LR
+    cli["ai-chassis command<br/>init, plan, apply, doctor"] --> config["Shared config<br/>modules and machine overlays"]
+    config --> context["Agent context files<br/>composed per machine"]
+    context --> sessions["Agent sessions<br/>Claude Code, Codex"]
+    skills["Skills and plugins"] --> sessions
+    mcp["MCP servers and services"] --> sessions
+    sessions <--> hooks["Hooks and guardrails<br/>checks on every tool call"]
+    sessions --> worktrees["Isolated worktrees<br/>one per agent"]
+    worktrees --> repos["Many project repositories"]
+    lifecycle["Session lifecycle<br/>save state, resume"] --> sessions
+    bus["Messaging and wake events<br/>between sessions and machines"] --> lifecycle
+    evidence["Review and audit evidence"] --> bus
+```
+
+### Stages
+
+```mermaid
+flowchart LR
+    subgraph released["Released"]
+        a["Installer and command"]
+        b["Configuration composition"]
+        c["Git and worktree helpers"]
+        d["First skills"]
+    end
+    subgraph next["Next"]
+        e["Core session modules"]
+        f["Full skill library"]
+        g["Hooks and settings templates"]
+    end
+    subgraph later["Later"]
+        h["Configuration templates"]
+        i["Scripts"]
+        j["Services, MCP servers, plugins"]
+        k["Deployment examples"]
+        l["Documentation and 1.0"]
+    end
+    released --> next --> later
+```
+
+| Stage | Sub-system | What it is | State |
+| --- | --- | --- | --- |
+| 1 | Installer and command line | `install.sh`, `install.ps1` and the `ai-chassis` command (`init`, `plan`, `apply`, `doctor`, `explain`), with the modules the command needs. | Released |
+| 1 | Configuration composition | Shared modules and per-machine overlays composed into the context files an agent reads. | Released |
+| 1 | Git and worktree helpers | Safe fast-forwards, worktree creation and removal, and validated commits. | Released, more to come |
+| 1 | First skills | A dozen skills that ship a `SKILL.md`, listed [above](#skills-in-this-release). | Released |
+| 2 | Core session modules | Context supervision, session state saving and resuming, messaging and hand-offs between sessions, documents held for human review, wake-ups, session liveness, and usage and quota tracking. | Next |
+| 3 | Full skill library | Planning, delegation, review and audit, task tracking and document authoring skills. | Next |
+| 4 | Hooks and settings | Claude Code hooks, settings templates and the status line that wire the skills and session modules into a live session. | Planned |
+| 5 | Configuration templates | Shared context modules and per-machine overlays as examples you adapt to your own machines. | Planned |
+| 6 | Scripts | Worktree and git safety, review and audit evidence, and quality checks, released in subsystem batches. | Planned |
+| 7 | Services, MCP and plugins | A message board between machines, a provider broker, extensions for other agent runtimes, MCP servers and Claude Code plugins. | Planned |
+| 8 | Deployment examples | Service units for systemd, launchd and Windows as examples. | Planned |
+| 9 | Documentation | Procedures, design, plan, research and audit templates, and the guides for everything above. | Planned, with the first 1.0 |
+
+Tests ship with the sub-system they test.
+
+### Alongside the stages
+
+- **Distribution.** A PyPI release of the package and installer, Claude Code plugin
+  marketplaces for the skills, and checks of the installer against fresh macOS and Linux
+  machines.
+- **Repository design.** A reorganization of the layout for best practice:
+  organization, scalability, installability, configurability and distribution.
+- **Plugins and MCP.** Consolidating the harness into MCP servers, MCP tools, plugin
+  modules and Claude Code mods, so you can take one piece without the rest.
+- **Companion projects.** Other tooling the harness relies on follows once ai-chassis
+  settles.
+- **Dogfooding.** The maintainers' private harness is being rebuilt as a downstream of
+  this repository, so what ships here is what they run.
+
 ## Get started
 
 You need Git, Python 3.11 or newer and [uv](https://docs.astral.sh/uv/).
@@ -159,10 +279,13 @@ run it.
 
 ## Status
 
-Alpha. Releases are small and frequent: each one adds a subsystem or fixes a defect,
-and the [changelog](CHANGELOG.md) says which. The command line application and the
-installer are in; a PyPI release is planned, and the remaining core modules, skills,
-hooks and configuration templates follow.
+Alpha. The private harness this repository comes from is much larger than what is
+published here. It is being refactored and cleaned up so that more and more of it can
+be released as open source, and each release publishes the next piece that has been
+generalized and checked. The [changelog](CHANGELOG.md) says what each release added.
+The command line application and the installer are in; a PyPI release is planned, and
+the rest of the core modules, skills, hooks and configuration templates follow, as laid
+out in the [Roadmap](#roadmap).
 
 Examples and templates are starting points to adapt to your own project. The Python
 suite covers the included test modules; it does not establish support for every tool
