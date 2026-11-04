@@ -1,0 +1,5 @@
+# Copy to ci-fleet-diagnostics.local.toml and set the absolute roots owned by
+# your fleet deployment. Only <slug>/<host>/diagnostics below runners_root is readable.
+[diagnostics]
+jobs_root = "/var/lib/example-fleet/jobs"
+runners_root = "/var/lib/example-fleet/runners"

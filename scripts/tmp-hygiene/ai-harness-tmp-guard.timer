@@ -1,0 +1,18 @@
+[Unit]
+Description=Check ai-harness temporary-root inode pressure every minute
+
+[Timer]
+OnBootSec=1min
+# OnActiveSec anchors to the moment this timer unit is activated, so the timer still
+# schedules in a manager instance started mid-uptime. OnBootSec alone cannot: it is
+# measured from system boot, and OnUnitActiveSec needs a prior activation in that same
+# instance, so the pair left NextElapseUSecMonotonic=infinity on a restarted user manager
+# while the timer still reported enabled and active (ISSUE-REF). Persistent= is NOT the
+# remedy and was dropped: systemd applies it to OnCalendar= timers only, and catching up
+# missed runs is meaningless at this interval anyway.
+OnActiveSec=1min
+OnUnitActiveSec=1min
+AccuracySec=5s
+
+[Install]
+WantedBy=timers.target

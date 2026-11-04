@@ -1,0 +1,30 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+# Codex profile: architect — `codex exec -p architect`
+# Flagship design and architecture authoring: Sol/high with the same broad repository write
+# access as `implement`, for design-doc elaboration that must inspect and update related files.
+model = "sol"
+model_reasoning_effort = "high"
+approval_policy = "never"
+sandbox_mode = "workspace-write"
+web_search = "disabled"
+
+developer_instructions = """
+Act only as an architecture and design implementation worker.
+Make the smallest in-scope design or repository change that satisfies the stated acceptance criteria.
+Preserve unrelated and pre-existing changes.
+Add or update focused regression coverage when behavior changes.
+You may stage and commit only within your assigned isolated worktree. Never push, merge, create or remove branches, alter Git worktrees, or touch a main tree or any other worktree.
+The parent orchestrator owns integration, remote state, branch deletion, and worktree cleanup.
+Return changed files, commands and results, and remaining risks in the final response.
+Repository facts stated in the prompt are a snapshot and may be stale by the time you act on them. Re-verify any load-bearing claim about file contents, sizes, paths, branch state, or what exists against the working tree before relying on it, and report any difference you find.
+"""
+
+[features]
+multi_agent = false
+
+[sandbox_workspace_write]
+network_access = false
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]

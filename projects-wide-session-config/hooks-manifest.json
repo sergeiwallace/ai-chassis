@@ -1,0 +1,362 @@
+{
+  "_comment": "Portable hook wiring for ai-harness-lite. Machine scopes must use names from config.toml; optional tools are checked by each hook before use.",
+  "_machines": [
+    "mac",
+    "linux"
+  ],
+  "_note": "Managed hook entries are preserved from the source manifest. Dormant scripts remain unwired until explicitly enabled.",
+  "hooks": [
+    {
+      "_why": "Portable advisory lifecycle detection: mark only positively provenanced scratch linked worktrees for one-shot checklist injection; grant no landing or reclamation authority.",
+      "name": "worktree-lifecycle-session-start",
+      "script": "worktree-lifecycle-session-start.sh",
+      "event": "SessionStart",
+      "target": "user",
+      "machines": "all",
+      "timeout": 5
+    },
+    {
+      "_why": "Portable advisory lifecycle injection: consume the scratch-session flag once and present the seven-check handoff without granting mutation authority. ISSUE-REF raised the budget 5 -> 30 s and this copy was left behind: the hook's entire cost is process creation, which is global contention it cannot control, and under 8 concurrent invocations it measured a 6.5 s median with 5 of 8 runs over 5 s -- so every overrun printed 'timed out after 5s -- output discarded' and the injection silently did not happen. 30 is a CAP, not a delay.",
+      "name": "worktree-lifecycle-prompt-inject",
+      "script": "worktree-lifecycle-prompt-inject.sh",
+      "event": "UserPromptSubmit",
+      "target": "user",
+      "machines": "all",
+      "timeout": 30
+    },
+    {
+      "name": "config-reload-reset",
+      "script": "config-reload-reset.sh",
+      "event": "SessionStart",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "name": "config-reload-watch",
+      "script": "config-reload-watch.sh",
+      "event": "FileChanged",
+      "matcher": "CLAUDE.md",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "name": "config-reload-check",
+      "script": "config-reload-check.sh",
+      "event": "UserPromptSubmit",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "name": "context-high-notice",
+      "script": "context-high-notice.sh",
+      "event": "UserPromptSubmit",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable context-pressure escalation: the existing PreToolUse notice path is advisory at 55–79% and returns a native FORCE deny at 80%+ until Skill(save-state) opens the persisted grace window through CC-START.",
+      "name": "context-high-escalation",
+      "script": "context-high-notice.sh",
+      "event": "PreToolUse",
+      "target": "user",
+      "machines": "all",
+      "arguments": ["pre-tool"]
+    },
+    {
+      "name": "substrate-degraded-notice",
+      "script": "substrate-degraded-notice.sh",
+      "event": "UserPromptSubmit",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable rationale: retain the substrate-auto-recall hook wiring and preserve its original event behavior; optional dependencies must fail soft.",
+      "name": "substrate-auto-recall",
+      "type": "mcp_tool",
+      "server": "ai-core",
+      "tool": "_hook_adapter_internal",
+      "input": {
+        "prompt": "${prompt}",
+        "session_id": "${session_id}",
+        "project": "${cwd}",
+        "repo": "${cwd}"
+      },
+      "event": "UserPromptSubmit",
+      "target": "user",
+      "machines": [
+        "mac"
+      ],
+      "timeout": 3
+    },
+    {
+      "_why": "Portable rationale: retain the substrate-recall-telemetry hook wiring and preserve its original event behavior; optional dependencies must fail soft.",
+      "name": "substrate-recall-telemetry",
+      "script": "substrate-recall-telemetry.sh",
+      "event": "UserPromptSubmit",
+      "target": "user",
+      "machines": [
+        "mac"
+      ],
+      "timeout": 10
+    },
+    {
+      "name": "task-panel-startup",
+      "script": "task-panel-startup.sh",
+      "event": "SessionStart",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable rationale: preserve sync-git's private owner-session proof producer; it writes no binding unless controller ancestry and exact Git worktree identity are provable.",
+      "name": "sync-git-owner-session-binding",
+      "script": "sync-git-owner-session-binding.sh",
+      "event": "SessionStart",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable continuation wiring: the bounded continuation poll runs after passive delivery inside the 30-second SessionStart hook budget.",
+      "name": "resume-inject",
+      "script": "resume-inject.sh",
+      "event": "SessionStart",
+      "target": "user",
+      "machines": "all",
+      "timeout": 30
+    },
+    {
+      "name": "bd-prime",
+      "script": "bd-prime.sh",
+      "capability": "bd",
+      "event": "SessionStart",
+      "target": "user",
+      "machines": [
+        "mac"
+      ]
+    },
+    {
+      "_why": "Portable rationale: retain the docs-priming hook wiring and preserve its original event behavior; optional dependencies must fail soft.",
+      "name": "docs-priming",
+      "script": "docs-priming.sh",
+      "event": "SessionStart",
+      "matcher": "startup|compact",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable rationale: retain the substrate-health hook wiring and preserve its original event behavior; optional dependencies must fail soft.",
+      "name": "substrate-health",
+      "script": "substrate-health.sh",
+      "event": "SessionStart",
+      "target": "user",
+      "machines": "all",
+      "timeout": 15
+    },
+    {
+      "_why": "Portable rationale: retain the bd-create-guard hook wiring and preserve its original event behavior; optional dependencies must fail soft.",
+      "name": "bd-create-guard",
+      "script": "bd-create-guard.sh",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable rationale: retain the agent-isolation-guard hook wiring and preserve its original event behavior; optional dependencies must fail soft.",
+      "name": "agent-isolation-guard",
+      "script": "agent-isolation-guard.sh",
+      "event": "PreToolUse",
+      "matcher": "Agent",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable rationale: retain the codex-offload-nudge-agent hook wiring and preserve its original event behavior; optional dependencies must fail soft.",
+      "name": "codex-offload-nudge-agent",
+      "script": "codex-offload-nudge.sh",
+      "event": "PreToolUse",
+      "matcher": "Agent",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable rationale: retain the codex-offload-nudge-bash hook wiring and preserve its original event behavior; optional dependencies must fail soft.",
+      "name": "codex-offload-nudge-bash",
+      "script": "codex-offload-nudge.sh",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable rationale: retain the disk-space-guard hook wiring and preserve its original event behavior; optional dependencies must fail soft.",
+      "name": "disk-space-guard",
+      "script": "disk-space-guard.sh",
+      "event": "SessionStart",
+      "target": "user",
+      "machines": "all",
+      "timeout": 5
+    },
+    {
+      "name": "workspace-guard",
+      "script": "workspace-guard.sh",
+      "event": "UserPromptSubmit",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "name": "enforce-workflow",
+      "script": "enforce-workflow.sh",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "target": "project",
+      "machines": "all"
+    },
+    {
+      "name": "airflow-watcher-required",
+      "script": "airflow-watcher-required.sh",
+      "event": "PostToolUse",
+      "matcher": "Bash",
+      "target": "project",
+      "machines": [
+        "mac",
+        "linux"
+      ]
+    },
+    {
+      "name": "airflow-watcher-resume",
+      "script": "airflow-watcher-resume.sh",
+      "event": "UserPromptSubmit",
+      "target": "project",
+      "machines": [
+        "mac",
+        "linux"
+      ]
+    },
+    {
+      "name": "precompact-safety",
+      "script": "precompact-safety.sh",
+      "event": "PreCompact",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable Phase 8 completion ACK. It is fail-open and produces no prompt output.",
+      "name": "context-supervisor-postcompact",
+      "script": "context-supervisor-postcompact.sh",
+      "event": "PostCompact",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable Phase 8 observational confirmation. It exits 0 and never denies or rewrites a user prompt.",
+      "name": "context-supervisor-user-prompt",
+      "script": "context-supervisor-user-prompt.sh",
+      "event": "UserPromptSubmit",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable Phase 8 idle confirmation. It records Claude Code's idle_prompt lifecycle signal and releases only an already Stop-authorized compact arm after the read-only composer check also passes.",
+      "name": "context-supervisor-idle-prompt",
+      "script": "context-supervisor-idle-prompt.sh",
+      "event": "Notification",
+      "matcher": "idle_prompt",
+      "target": "user",
+      "machines": "all",
+      "timeout": 90
+    },
+    {
+      "_why": "Portable Phase 8 sensing pickup: the existing Stop boundary calls the canonical ctx-pct sensor and delegates only new advice bands to the fail-open supervisor.",
+      "name": "context-supervisor-pickup",
+      "script": "context-supervisor-pickup.sh",
+      "event": "Stop",
+      "target": "user",
+      "machines": "all",
+      "timeout": 90
+    },
+    {
+      "_why": "Portable Phase 8 fast save-state completion: an async Stop watcher accepts only a version-gated, attempt-bound transcript receipt and otherwise leaves idle_prompt authoritative.",
+      "name": "context-supervisor-transcript-watch",
+      "script": "context-supervisor-transcript-watch.sh",
+      "event": "Stop",
+      "target": "user",
+      "machines": "all",
+      "async": true
+    },
+    {
+      "_why": "Portable bounded sensor for the paired /summary Stop nudge; records meaningful work-tool calls and an /auto-start or /auto-flow invocation for one session/prompt only.",
+      "name": "summary-nudge-sensor",
+      "script": "summary-nudge.sh",
+      "event": "PreToolUse",
+      "matcher": "Agent|Bash|Edit|NotebookEdit|Skill|Task|TaskCreate|TaskList|TaskOutput|TaskUpdate|Write",
+      "target": "user",
+      "machines": "all",
+      "arguments": ["pre-tool"],
+      "timeout": 15
+    },
+    {
+      "_why": "Portable advisory-only /summary reminder after 12 meaningful work-tool calls, or six after /auto-start or /auto-flow; latches per prompt and fails open.",
+      "name": "summary-nudge-stop",
+      "script": "summary-nudge.sh",
+      "event": "Stop",
+      "target": "user",
+      "machines": "all",
+      "arguments": ["stop"],
+      "timeout": 15
+    },
+    {
+      "_why": "Portable rationale: prevent cx/codex from bypassing Claude Code task tracking through `nohup`, `disown`, or a shell `&`; ordinary nohup usage remains allowed.",
+      "name": "codex-background-launch-guard",
+      "script": "codex-background-launch-guard.sh",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "target": "user",
+      "machines": "all"
+    },
+    {
+      "_why": "Portable rationale: retain the background-wait-pre-bash hook wiring and preserve its original event behavior; optional dependencies must fail soft.",
+      "name": "background-wait-pre-bash",
+      "script": "background-wait-guard.sh",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "target": "user",
+      "machines": "all",
+      "env": "pre"
+    },
+    {
+      "name": "background-wait-post-bash",
+      "script": "background-wait-guard.sh",
+      "event": "PostToolUse",
+      "matcher": "Bash",
+      "target": "user",
+      "machines": "all",
+      "env": "post-bash"
+    },
+    {
+      "_why": "Blocks with exit 2 when a Write/Edit leaves a markdown file citing a gitignored or untracked path as its evidence (ISSUE-REF). A citation to an ignored path reads as authoritative and resolves to nothing from any clone, and reaping the worktree that holds it destroys the only copy. It fires only on *.md inside a git work tree; a file outside any work tree exits 0 silently, while the checker's own no-verdict exit BLOCKS. Timeout matches the source manifest's 15s, which tests/test_hooks_manifest_share_parity.py requires.",
+      "name": "evidence-citation-gate",
+      "script": "evidence-citation-gate.sh",
+      "event": "PostToolUse",
+      "matcher": "Write|Edit|NotebookEdit",
+      "target": "user",
+      "machines": "all",
+      "timeout": 15
+    },
+    {
+      "name": "background-wait-stop",
+      "script": "background-wait-guard.sh",
+      "event": "Stop",
+      "target": "user",
+      "machines": "all",
+      "env": "stop"
+    },
+    {
+      "name": "background-wait-cleanup",
+      "script": "background-wait-guard.sh",
+      "event": "SessionStart",
+      "target": "user",
+      "machines": "all",
+      "env": "session-start"
+    }
+  ]
+}

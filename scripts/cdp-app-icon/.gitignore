@@ -1,0 +1,11 @@
+# generate_app_icon.py's outputs are DERIVED and regenerated at build time (the builder runs the
+# generator), so none of them is committed. Names follow --name/--out: <stem>_master.png,
+# <stem>_preview_64.png and any --sizes.
+*_master.png
+*_preview_64.png
+*_64.png
+*_128.png
+_*_rendered.png
+*.icns
+_cdp_launcher_backup/
+*.iconset/

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Decision Framework"
+  short_description: "Resolve document decisions consistently"
+  default_prompt: "Use $decision-framework to resolve these decisions in docs/plans/example.md."

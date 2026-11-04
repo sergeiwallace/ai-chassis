@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "thresholds": {
+    "hard_gate_pass_rate": 1.0,
+    "minimum_total_score": 0.9
+  },
+  "cases": [
+    {
+      "id": "document-needle-beginning",
+      "route": "document",
+      "mode": "brief",
+      "position": "beginning",
+      "position_needle": "RARE-17",
+      "retention_tags": ["rare-exception", "rollback-trigger"],
+      "must_keep": ["RARE-17", "latency exceeds 240 ms"],
+      "required_facts": ["shadow mode", "rollback"],
+      "forbidden_claims": ["the migration is unconditional"],
+      "source": "RARE-17 is the binding exception: tenants using the legacy signed-envelope format remain in shadow mode. Roll back the new verifier if p95 latency exceeds 240 ms for two consecutive windows. The migration otherwise introduces a staged verifier for ordinary tenants. The first stage mirrors requests and records mismatches without changing responses. The second stage enables enforcement for an internal cohort after the mismatch rate remains below the documented tolerance. Operators inspect the dashboard at each gate and retain the old verifier throughout the rollout. The design lists deployment ownership, monitoring, and a maintenance window. It describes the new validation path, the compatibility shim, configuration lookup, and logging fields. It also records standard acceptance criteria for valid requests, invalid signatures, expired timestamps, and malformed payloads. Later sections discuss dashboards, alert routing, documentation, and cleanup after the observation period. None of those routine details cancels the legacy-envelope exception or its rollback trigger. The final approval remains conditional on the staged evidence and keeps the old path available until enforcement is proven safe.",
+      "gold_output": "- The document proposes a staged verifier, beginning with mirrored requests in shadow mode and later enabling an internal enforcement cohort.\n- RARE-17 remains binding: legacy signed-envelope tenants stay in shadow mode rather than entering normal enforcement.\n- Rollback is required when p95 latency exceeds 240 ms for two consecutive windows; the old verifier remains available.\n- Acceptance covers valid, invalid, expired, and malformed requests, with mismatch and latency dashboards at each gate.\n- The final decision is conditional on staged evidence; cleanup follows only after enforcement is proven safe."
+    },
+    {
+      "id": "code-needle-middle",
+      "route": "code",
+      "mode": "brief",
+      "position": "middle",
+      "position_needle": "REJECTED-POLLING",
+      "retention_tags": ["rejected-alternative"],
+      "must_keep": ["REJECTED-POLLING"],
+      "required_facts": ["event stream", "inference"],
+      "forbidden_claims": ["polling is the chosen implementation"],
+      "source": "The repository exposes a queue consumer with a narrow enqueue interface and a worker that acknowledges events after persistence. Tests cover duplicate delivery, malformed payloads, retry exhaustion, and shutdown while work is active. Configuration supplies the retry count and backoff ceiling. The current implementation stores a delivery identifier before invoking downstream handlers, and the deduplication test demonstrates that a repeated event does not invoke a handler twice. Metrics record received, retried, rejected, and completed counts. The public API does not promise ordering across independent keys. REJECTED-POLLING records that periodic database polling was considered and rejected; the implementation uses the event stream already supplied by the platform. The commit message says this avoided a second source of truth, but that is source-stated rationale rather than behavior established by tests. The shutdown path stops intake, drains active handlers, and leaves unacknowledged events for redelivery. A timeout bounds draining. From the code structure it is reasonable to infer that at-least-once delivery is expected, but no design document records that intent. Operational documentation names dashboards and the retry queue. Current behavior and tests outrank an older commit note that incorrectly says ordering is global.",
+      "gold_output": "- Observed behavior: the worker persists delivery identifiers, deduplicates repeats, retries failures, and drains active handlers during bounded shutdown.\n- The chosen integration uses the platform event stream; REJECTED-POLLING records periodic database polling as a rejected alternative.\n- Tests establish duplicate suppression, malformed-input handling, retry exhaustion, and shutdown behavior, but not global ordering.\n- Source-stated rationale says the event stream avoids a second source of truth; that claim comes from a commit message.\n- Inference: the structure suggests at-least-once delivery, but no design records that intent and an older global-ordering note conflicts with current tests."
+    },
+    {
+      "id": "issue-needle-end",
+      "route": "issue",
+      "mode": "brief",
+      "position": "end",
+      "position_needle": "OWNER-TBD-9",
+      "retention_tags": ["unresolved-owner"],
+      "must_keep": ["OWNER-TBD-9"],
+      "required_facts": ["timeout", "verification"],
+      "forbidden_claims": ["the issue is fully closed"],
+      "source": "The issue began with reports that large exports sometimes stopped at ninety percent. The first hypothesis blamed object-storage throttling, but request logs showed no throttling responses. A reproduction used an account with many deleted records and a narrow database statement timeout. Tracing then showed the export query waiting behind cleanup work. Raising the timeout reduced failures but increased resource occupancy, so that workaround was reverted. The implemented change paginates the cleanup query and yields between pages. Unit coverage verifies cursor advancement and retry behavior. A staging run completed twelve representative exports and showed stable database latency. The team also added a timeout metric and a dashboard panel. One comment suggested closing immediately, while a later verification note required a full production observation window. Production evidence now covers two ordinary workloads but not the largest account shape. The symptom has not recurred in observed workloads, yet the final high-volume verification remains pending. The issue therefore is mitigated and under observation rather than fully closed. The remaining action is to run the largest-account export, compare timeout and latency metrics, and record the result. Ownership of that final verification is still unresolved under OWNER-TBD-9.",
+      "gold_output": "- Current state: the export timeout is mitigated and under observation, not fully closed, because the largest-account run is still pending.\n- Evidence disproved storage throttling and traced the stall to cleanup-query lock waiting under a narrow statement timeout.\n- The shipped change paginates cleanup, yields between pages, and adds timeout metrics; the simple timeout increase was reverted.\n- Verification includes unit coverage and twelve staging exports, plus two ordinary production workloads without recurrence.\n- Remaining action: run the largest-account export and compare metrics; OWNER-TBD-9 shows that its owner is unresolved."
+    },
+    {
+      "id": "topic-conflict",
+      "route": "topic",
+      "mode": "brief",
+      "required_facts": ["Source A", "Source B", "unresolved"],
+      "must_keep": ["30 seconds", "five minutes"],
+      "forbidden_claims": ["the correct timeout is 30 seconds"],
+      "conflict": {"sides": ["30 seconds", "five minutes"]},
+      "gold_output": "- The supplied packet disagrees on the retry timeout, and the conflict is unresolved by the available evidence.\n- Source A specifies 30 seconds and ties that value to interactive latency.\n- Source B specifies five minutes and ties it to recovery from provider throttling.\n- Neither source supersedes the other or identifies a shared operating mode, so choosing one value would add unsupported resolution.\n- Next evidence needed: scope each recommendation to workload and revision, then establish which source governs the deployment being discussed."
+    },
+    {
+      "id": "issue-semantic-reducer",
+      "route": "issue",
+      "mode": "brief",
+      "partitions": ["report-and-reproduction", "hypothesis-and-reversal", "fix-and-verification"],
+      "required_facts": ["EVT-104", "EVT-219", "EVT-331"],
+      "must_keep": ["queue shard q-7"],
+      "forbidden_claims": ["EVT-331 preceded EVT-219"],
+      "chronology": ["EVT-104", "EVT-219", "EVT-331"],
+      "gold_output": "- EVT-104 opened the incident after duplicate notifications appeared on queue shard q-7.\n- EVT-219 later disproved the original client-retry hypothesis by matching duplicates to lease expiry during slow handlers.\n- The fix renewed leases while handlers remained active and retained the delivery-key deduplication guard.\n- EVT-331 then verified the change with the slow-handler reproduction and a six-hour staging run without duplicates.\n- Current state: the causal reversal and identifier chronology survive reduction across all three semantic partitions; production observation remains the next action."
+    }
+  ]
+}

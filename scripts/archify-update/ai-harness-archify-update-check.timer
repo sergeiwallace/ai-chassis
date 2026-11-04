@@ -1,0 +1,10 @@
+[Unit]
+Description=Weekly check for archify skill drift against upstream tt-a1i/archify
+
+[Timer]
+OnBootSec=15min
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

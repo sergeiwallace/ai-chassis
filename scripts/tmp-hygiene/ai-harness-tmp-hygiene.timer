@@ -1,0 +1,17 @@
+[Unit]
+Description=Periodically clean stale ai-harness temporary roots and caches
+
+[Timer]
+OnBootSec=15min
+# OnActiveSec anchors to the moment this timer unit is activated, so the timer still
+# schedules in a manager instance started mid-uptime. OnBootSec alone cannot: it is
+# measured from system boot, and OnUnitActiveSec needs a prior activation in that same
+# instance, so the pair left NextElapseUSecMonotonic=infinity on a restarted user manager
+# while the timer still reported enabled and active (ISSUE-REF). Persistent= is NOT the
+# remedy and was dropped: systemd applies it to OnCalendar= timers only, and catching up
+# missed runs is meaningless at this interval anyway.
+OnActiveSec=15min
+OnUnitActiveSec=10min
+
+[Install]
+WantedBy=timers.target

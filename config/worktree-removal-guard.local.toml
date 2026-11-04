@@ -1,0 +1,5 @@
+# Copy to worktree-removal-guard.local.toml and name the operator authorized to
+# create the registry's manual override records.
+[worktree_removal_guard]
+approver_display = "example-operator"
+audit_command = "scripts/worktree_audit.py"

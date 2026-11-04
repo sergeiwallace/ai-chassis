@@ -1,0 +1,11 @@
+[Unit]
+Description=ai-harness temporary-root inode creation telemetry
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/env python3 %h/projects/ai-harness/scripts/tmp-hygiene/inode_creation_telemetry.py
+PrivateTmp=false
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/var/tmp/ai-harness-tmp-hygiene/inode-creation-telemetry
+NoNewPrivileges=true

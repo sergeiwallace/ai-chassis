@@ -1,0 +1,33 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+# Fixed actor profile for cx --aido-attenuated implement.  The worktree and the real
+# CODEX_HOME denies are added by cx per invocation; callers cannot select this profile directly
+# through the attenuated surface or add overrides after those entries.
+model = "sol"
+model_reasoning_effort = "medium"
+approval_policy = "never"
+web_search = "disabled"
+default_permissions = "aido-implement"
+
+developer_instructions = """
+Act only as an implementation worker.
+Make the smallest in-scope change that satisfies the stated acceptance criteria.
+Preserve unrelated and pre-existing changes.
+Add or update focused regression coverage when behavior changes.
+Commit each completed logical unit through the aih_commit commit tool, using only repository-relative paths for that unit. Never use shell Git commands to stage or commit, and never push, merge, create or remove branches, or alter Git worktrees. cx performs a final commit of remaining tracked changes and owns remote state.
+Return changed files, commands and results, and remaining risks in the final response.
+Repository facts stated in the prompt are a snapshot and may be stale by the time you act on them. Re-verify any load-bearing claim about file contents, sizes, paths, branch state, or what exists against the working tree before relying on it, and report any difference you find.
+"""
+
+[features]
+multi_agent = false
+
+[permissions.aido-implement]
+description = "Attenuated aido fixer: broad read, invocation worktree write, credential home denied."
+
+[permissions.aido-implement.filesystem]
+":root" = "read"
+":tmpdir" = "deny"
+":slash_tmp" = "deny"
+
+[permissions.aido-implement.network]
+enabled = false

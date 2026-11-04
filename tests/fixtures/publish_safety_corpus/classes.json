@@ -1,0 +1,13 @@
+[
+  {"id": "synthetic-secret", "label": "secret", "text": "synthetic secret marker: NOT_A_CREDENTIAL"},
+  {"id": "synthetic-personal", "label": "personal", "text": "synthetic personal identity marker"},
+  {"id": "synthetic-employer-client", "label": "employer-client", "text": "synthetic employer-client narrative marker"},
+  {"id": "synthetic-private-operations", "label": "private-operations", "text": "synthetic internal operation marker"},
+  {"id": "synthetic-private-project", "label": "private-project", "text": "synthetic private project marker"},
+  {"id": "synthetic-public-intentional", "label": "public-intentional", "text": "synthetic intentional public identity marker"},
+  {"id": "benign-home-claude", "label": "benign", "text": "/home/.claude is a documentation example"},
+  {"id": "benign-home-user", "label": "benign", "text": "/home/u is a documentation example"},
+  {"id": "benign-users-example", "label": "benign", "text": "/Users/example-user is an intentional example"},
+  {"id": "benign-provider-names", "label": "benign", "text": "provider names are benign context"},
+  {"id": "benign-profile-tokens", "label": "benign", "text": "profile tokens are benign context"}
+]

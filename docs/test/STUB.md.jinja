@@ -1,0 +1,61 @@
+---
+title: {{ title | default("[Test Title]") | tojson }}
+category: test
+tags: [test]
+status: stub
+source: "{{ source | default("aido-stub") }}"
+template_version: "test-1.0.0"
+---
+
+# {{ title | default("[Test Title]") }}
+
+## Founding Ask Coverage
+
+`founding_ask_ref`: [FILL: exact `canonical_root_json` + `founding_ask_ref_sha256` | N/A with reason]
+
+[FILL: When this `founding_ask_ref` is `N/A` for a Tier 1 dispatch with no `canonical_root_json`, paste the literal `verbatim_exact_ask` from the worker brief directly below in a fenced `text` block. Never replace it with a summary or a reference to the transient brief. Do not add this block for Tier 0 or Tier 2/3.]
+
+**Status:** stub
+
+**Created:** {{ date | default("YYYY-MM-DD") }}
+
+<!-- doc:region name="overview" kind="replaceable" -->
+
+## Overview
+
+[What this test doc covers (programmatic testing).]
+
+<!-- /doc:region name="overview" -->
+
+<!-- doc:region name="setup" kind="replaceable" -->
+
+## Setup
+
+[Environment / fixtures / preconditions.]
+
+<!-- /doc:region name="setup" -->
+
+<!-- doc:region name="scenarios" kind="replaceable" -->
+
+## Scenarios
+
+[Test scenarios / cases.]
+
+<!-- /doc:region name="scenarios" -->
+
+<!-- doc:region name="expected_results" kind="replaceable" -->
+
+## Expected Results
+
+[Expected outcomes per scenario.]
+
+<!-- /doc:region name="expected_results" -->
+
+<!-- doc:region name="results_log" kind="append_only" -->
+
+## Results Log
+
+| Date | Scenario | Result | Notes |
+|------|----------|--------|-------|
+
+<!-- /doc:region name="results_log" -->

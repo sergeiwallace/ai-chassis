@@ -1,0 +1,7 @@
+# Copy this template to cx-provider-routing.local.toml and list any machine
+# profiles that should use a non-default Codex provider. An empty list keeps the
+# portable default for every host.
+[provider_routing]
+enterprise_hosts = []
+default_provider = "openai-chatgpt-subscription"
+enterprise_provider = "example-enterprise-provider"

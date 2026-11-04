@@ -1,0 +1,25 @@
+{
+  "fixtureSchemaVersion": 1,
+  "claudeVersion": "2.1.226",
+  "command": ["agents", "--json", "--all"],
+  "output": [
+    {
+      "cwd": "__WORKTREE__",
+      "id": "agent-done",
+      "kind": "agent",
+      "name": "phase-three-done",
+      "sessionId": "session-done",
+      "startedAt": "2026-09-07T11:00:00.000Z",
+      "state": "done"
+    },
+    {
+      "cwd": "__WORKTREE__",
+      "id": "agent-failed",
+      "kind": "agent",
+      "name": "phase-three-failed",
+      "sessionId": "session-failed",
+      "startedAt": "2026-09-07T11:30:00.000Z",
+      "state": "failed"
+    }
+  ]
+}

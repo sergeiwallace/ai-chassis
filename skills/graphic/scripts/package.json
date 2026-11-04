@@ -1,0 +1,9 @@
+{
+  "name": "graphic-skill-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Runtime dependency for resvg_contact_sheet.mjs, installed under skills/graphic/.toolchain by graphic-toolchain.mjs.",
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2"
+  }
+}

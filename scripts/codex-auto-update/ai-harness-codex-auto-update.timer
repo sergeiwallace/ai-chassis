@@ -1,0 +1,20 @@
+[Unit]
+Description=Daily safe Codex CLI auto-update
+
+[Timer]
+# Unlike the sub-hourly maintenance timers, this one is daily and its Persistent= request is
+# genuinely wanted -- example-project-ec2 stops itself over the weekend, so a monotonic-only daily timer
+# skips the whole outage silently. Persistent= only takes effect on an OnCalendar= timer
+# though, so the basis moves to OnCalendar and the declared catch-up finally works (ISSUE-REF).
+# This also fixes the scheduling defect the other timers hit: OnBootSec is measured from system
+# boot and OnUnitActiveSec needs a prior activation in the same manager instance, so the old
+# pair left NextElapseUSecMonotonic=infinity after a mid-uptime user-manager restart -- measured
+# on this host, where it was the one timer left broken because starting its service would have
+# changed tool versions under live sessions.
+OnCalendar=daily
+Persistent=true
+# Spread the fleet's updates rather than having every machine fetch at midnight.
+RandomizedDelaySec=30m
+
+[Install]
+WantedBy=timers.target

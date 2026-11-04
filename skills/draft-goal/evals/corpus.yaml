@@ -1,0 +1,33 @@
+cases:
+  - ask: "Create a checked report."
+    expected_fit_class: goal
+    expected_validator_ok: true
+    expected_terminal_state: SUCCESS
+  - ask: "Check a credential-gated service."
+    expected_fit_class: goal
+    expected_validator_ok: true
+    expected_terminal_state: BLOCKED
+  - ask: "Make it inspiring."
+    expected_fit_class: not-autonomous-fit
+    expected_validator_ok: false
+    expected_terminal_state: UNSAFE_OR_OUT_OF_SCOPE
+  - ask: "Watch external status hourly."
+    expected_fit_class: loop
+    expected_validator_ok: true
+    expected_terminal_state: SUCCESS
+  - ask: "Repair one bounded typo."
+    expected_fit_class: one-shot
+    expected_validator_ok: false
+    expected_terminal_state: UNSAFE_OR_OUT_OF_SCOPE
+  - ask: "Produce two independent reports."
+    expected_fit_class: goal
+    expected_validator_ok: true
+    expected_terminal_state: SUCCESS
+  - ask: "Wait for a human legal decision."
+    expected_fit_class: not-autonomous-fit
+    expected_validator_ok: false
+    expected_terminal_state: BLOCKED
+  - ask: "Observe and repair a periodic signal."
+    expected_fit_class: goal+loop
+    expected_validator_ok: true
+    expected_terminal_state: BUDGET_EXHAUSTED

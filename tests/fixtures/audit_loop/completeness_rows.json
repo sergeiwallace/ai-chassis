@@ -1,0 +1,1 @@
+[{"requirement_id":"R-1","member_path":"services/example.py","member_digest":"blob:one","property":"rejects invalid input","production_boundary":"service","required_capability":"filesystem-read","evidence_ids":["evidence:1"],"disposition":"implemented"}]

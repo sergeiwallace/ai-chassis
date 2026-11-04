@@ -1,0 +1,11 @@
+[Unit]
+Description=ai-harness temporary-root inode-pressure guard
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/env python3 %h/projects/ai-harness/scripts/tmp_inode_guard.py
+PrivateTmp=false
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=%h/.local/state/ai-harness
+NoNewPrivileges=true

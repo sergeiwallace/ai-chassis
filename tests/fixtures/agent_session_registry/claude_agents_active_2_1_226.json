@@ -1,0 +1,16 @@
+{
+  "fixtureSchemaVersion": 1,
+  "claudeVersion": "2.1.226",
+  "command": ["agents", "--json"],
+  "output": [
+    {
+      "cwd": "__WORKTREE__",
+      "id": "agent-active",
+      "kind": "agent",
+      "name": "phase-three",
+      "sessionId": "session-active",
+      "startedAt": "2026-09-07T12:00:00.000Z",
+      "state": "working"
+    }
+  ]
+}

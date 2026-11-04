@@ -1,0 +1,9 @@
+# Copy to checkout-discovery.local.toml and replace the generic checkout leaf.
+# Wrappers expand HOME, PROJECTS_ROOT, and PROJECTS_DIR only; candidates whose
+# referenced variable is unset are skipped.
+[checkout_discovery]
+candidates = [
+  "${PROJECTS_ROOT}/your-harness-checkout",
+  "${PROJECTS_DIR}/your-harness-checkout",
+  "${HOME}/projects/your-harness-checkout",
+]

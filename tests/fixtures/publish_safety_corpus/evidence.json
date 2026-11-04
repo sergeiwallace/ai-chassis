@@ -1,0 +1,7 @@
+[
+  {"label":"encoded","text":"synthetic base64 evidence","expected_evidence_pin":{"source_kind":"git-object","object_oid":"a1","protected_ref":"refs/publish-safety/evidence/i/a1","decoder_digest":"sha256:decoder-encoded"}},
+  {"label":"split","text":"synthetic split evidence","expected_evidence_pin":{"source_kind":"git-object","object_oid":"a2","protected_ref":"refs/publish-safety/evidence/i/a2","decoder_digest":"sha256:decoder-split"}},
+  {"label":"deleted-from-history","text":"synthetic deleted history evidence","expected_evidence_pin":{"source_kind":"git-object","object_oid":"a3","protected_ref":"refs/publish-safety/evidence/i/a3","decoder_digest":"sha256:decoder-history"}},
+  {"label":"reachable-history","text":"synthetic reachable history evidence","expected_evidence_pin":{"source_kind":"git-object","object_oid":"a4","protected_ref":"refs/publish-safety/evidence/i/a4","decoder_digest":"sha256:decoder-history"}},
+  {"label":"release-asset","text":"synthetic release asset evidence","expected_evidence_pin":{"source_kind":"release-asset","asset_locator":{"release_id":1,"asset_id":2,"content_digest":"sha256:asset"},"decoder_digest":"sha256:decoder-asset"}}
+]

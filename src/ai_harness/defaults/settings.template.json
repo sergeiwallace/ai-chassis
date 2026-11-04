@@ -1,0 +1,42 @@
+{
+  "promptSuggestionEnabled": false,
+  "crossSessionInbound": "accept",
+  "isolatePeerMachines": false,
+  "env": {
+    "DISABLE_GROWTHBOOK": "",
+    "CLAUDE_CODE_ENABLE_TODO_TOOLS": "1",
+    "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "3",
+    "CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS": "10"
+  },
+  "mcpServers": {
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "env": {}
+    }
+  },
+  "tui": "fullscreen",
+  "permissions": {
+    "deny": [
+      "Agent(general-purpose)",
+      "Agent(fork)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash \"$HOME/.claude/statusline-command.sh\""
+  },
+  "extraKnownMarketplaces": {
+    "mattpocock": {
+      "source": {
+        "source": "github",
+        "repo": "mattpocock/skills"
+      },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": {
+    "mattpocock-skills@mattpocock": true
+  }
+}

@@ -1,0 +1,17 @@
+spec_version: 1
+subsystem: example
+owner: owner
+reviewed_by: {family: human, model: reviewer, date: 2026-01-01}
+target_anchor: services/example.py
+candidate_digest: tree:one
+policy_version: audit-loop-policy/1
+states: [clear]
+initial_state: clear
+event_alphabet: [check]
+transitions:
+  - {id: T1, source: clear, event: check, guard: true, target: clear, observable_effect: checked}
+invalid_transition_policy: every uncovered source/event/guard is explicitly rejected
+dimensions: {phase: [before]}
+invariants: [{id: INV-1, statement: stays clear, kind: safety, counterexample_test: tests/test_x.py::test_x}]
+cells: [{key: [before], invariants: [INV-1], disposition: implemented, evidence: tests/test_x.py::test_x}]
+dimension_challenge: {reviewer: human, proposed_omissions: [], disposition: none}

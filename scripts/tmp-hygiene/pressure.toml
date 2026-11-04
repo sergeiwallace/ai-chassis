@@ -1,0 +1,11 @@
+warn_pct = 70
+cleanup_pct = 80
+critical_pct = 90
+failed_root_retention_minutes = 30
+gauge_path = "~/.local/state/ai-harness/tmp-inode-gauge.jsonl"
+# Byte pressure uses the fuller of user quota and statvfs; reaping stops below warn.
+byte_warn_pct = 80
+byte_reap_pct = 90
+byte_min_age_minutes = 60
+# Absolute paths; a directory containing any protected root is also kept.
+protected_roots = []
