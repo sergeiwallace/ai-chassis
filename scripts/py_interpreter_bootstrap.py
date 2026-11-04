@@ -6,12 +6,32 @@ old OS ``python3`` before the calling script imports newer standard-library APIs
 
 import os
 import pathlib
-import shutil
-import subprocess
 import sys
 
 
 _SENTINEL = "AI_HARNESS_PY_BOOTSTRAP_REEXEC"
+
+# ``shutil`` and ``subprocess`` are needed only to look for and probe another interpreter,
+# which happens when the running one is too old. Importing them at the top cost every
+# script that carries this preamble about half a megabyte of reads at start, on the common
+# path where the interpreter is already fine. They load on first use instead, and stay
+# reachable as ``py_interpreter_bootstrap.shutil`` / ``.subprocess`` (PEP 562, Python 3.7
+# and later) for callers and tests that patch them. The imports are written out, one per
+# name, rather than computed with ``importlib.import_module(name)``: the release engine's
+# import-closure extractor refuses a computed module name, so the computed form stopped the
+# first ai-chassis 0.2.0 build.
+
+
+def __getattr__(name):
+    if name == "shutil":
+        import shutil
+
+        return shutil
+    if name == "subprocess":
+        import subprocess
+
+        return subprocess
+    raise AttributeError("module %r has no attribute %r" % (__name__, name))
 
 
 def _checkout_root(script_file):
@@ -59,12 +79,16 @@ def _candidates(script_file):
         if main_root:
             yield os.path.join(main_root, ".venv", "bin", "python")
             yield os.path.join(main_root, ".venv", "Scripts", "python.exe")
+    import shutil
+
     for name in ("python3.14", "python3.13", "python3.12", "python3.11"):
         yield shutil.which(name) or name
 
 
 def _supports_minimum(candidate, minimum, required_modules=()):
     """Prove *candidate* meets the version and optional dependency requirements."""
+    import subprocess
+
     probe = (
         "import sys, importlib; "
         "[importlib.import_module(name) for name in "

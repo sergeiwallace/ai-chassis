@@ -1,0 +1,8 @@
+[mcp_servers.ai-harness-core]
+command = $interpreter
+args = ["-P", "-m", "ai_chassis.mcp"]
+startup_timeout_sec = $timeout
+tool_timeout_sec = $timeout
+enabled = true
+enabled_tools = $tools
+env = { AI_HARNESS_CONFIG_HOME = $config_home }

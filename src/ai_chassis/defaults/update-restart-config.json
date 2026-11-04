@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "idle_after_seconds": 300,
+  "agent_idle_seconds": 10800,
+  "background_idle_seconds": 10800,
+  "retry_after_seconds": 3600,
+  "unknown_kind_max_attempts": 3,
+  "coexistence_ttl_seconds": 900,
+  "agent_names": ["claude"],
+  "hold_probe_retry_seconds": 600,
+  "hold_probe_text": "update restart: checking the composer is empty",
+  "compact_before_restart_when": "at_or_above",
+  "compact_before_restart_pct": 50,
+  "compact_before_restart_max_wait_seconds": 7200,
+  "reprobe_after_seconds": 21600,
+  "reprobe_max": 4,
+  "window_notice_after_seconds": 86400,
+  "resume_prompt": ""
+}

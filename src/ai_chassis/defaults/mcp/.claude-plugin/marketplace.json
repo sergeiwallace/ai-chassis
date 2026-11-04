@@ -1,0 +1,13 @@
+{
+  "name": "ai-harness-core-local",
+  "owner": {"name": "ai-harness"},
+  "metadata": {"description": "Local core queries for the installed ai-harness runtime."},
+  "plugins": [
+    {
+      "name": "ai-harness-core",
+      "source": "./plugins/ai-harness-core",
+      "version": "$package_version",
+      "description": "Read-only harness configuration queries."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "ai-harness-core",
+  "version": "$package_version",
+  "author": {"name": "ai-harness"},
+  "license": "Apache-2.0",
+  "description": "Read-only harness configuration queries. Requires the matching installed ai-harness Python runtime."
+}

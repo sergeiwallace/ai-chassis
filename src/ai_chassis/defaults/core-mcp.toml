@@ -1,0 +1,23 @@
+schema_version = 1
+api_major = 1
+redaction_version = 1
+
+[limits]
+call_timeout_seconds = 10
+max_result_bytes = 65536
+max_items = 100
+
+[tools.harness_validate]
+fields = []
+[tools.harness_explain]
+fields = ['key']
+keys = ['site.agents', 'site.machines']
+[tools.harness_plan]
+fields = ['targets']
+targets = ['AGENTS.md', 'CLAUDE.md', 'GEMINI.md']
+[tools.harness_doctor]
+fields = ['checks']
+checks = ['config', 'generation', 'links', 'storage']
+
+[tools.harness_secret_handoff_plan]
+fields = ['recipe', 'project', 'config', 'operation', 'host_id']

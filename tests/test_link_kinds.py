@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
 
-from ai_harness.links import reconcile
+from ai_chassis.links import reconcile
 
 
 def test_symlink_kind_is_recordable_in_a_tmp_path(tmp_path: Path) -> None:

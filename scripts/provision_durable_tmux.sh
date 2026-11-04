@@ -25,7 +25,7 @@
 set -euo pipefail
 
 # The transport floor, mirrored from MINIMUM_TMUX_VERSION in
-# src/ai_harness/context_supervisor.py. Mirrored rather than parsed because this script
+# src/ai_chassis/context_supervisor.py. Mirrored rather than parsed because this script
 # must run before any Python environment is guaranteed; the two are pinned equal by
 # tests/test_install_durable_tmux.py, so a divergence is a red test, not a silent drift.
 TMUX_TRANSPORT_FLOOR="3.7"

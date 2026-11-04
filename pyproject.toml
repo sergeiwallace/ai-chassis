@@ -1,19 +1,53 @@
 [project]
 name = "ai-chassis"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Reusable source tools and templates for AI coding agents"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
+dependencies = [
+  "httpx[http2]>=0.27,<1",
+  "mcp>=1.25,<2",
+  "platformdirs>=4",
+  "psutil>=7.2.2",
+  "pywin32; sys_platform == 'win32'",
+]
 
-[tool.uv]
-package = false
+[project.optional-dependencies]
+# The Buzz channel client. Imported lazily, so a machine without it keeps working.
+buzz = [
+  "nostr-sdk>=0.45.1,<0.46",
+  "websockets>=13,<16",
+]
+
+[project.scripts]
+ai-chassis = "ai_chassis.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+version = { file = "VERSION" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# Data files the code reads from beside its modules. The plugin directories start with a
+# dot, which a plain * does not match, so they are listed by name.
+[tool.setuptools.package-data]
+ai_chassis = [
+  "defaults/*",
+  "defaults/mcp/*.template",
+  "defaults/mcp/.claude-plugin/*.json",
+  "defaults/mcp/plugins/*/.claude-plugin/*.json",
+  "defaults/mcp/plugins/*/.mcp.json",
+]
 
 [dependency-groups]
 dev = [
   "jsonschema>=4.18",
-  "psutil>=7.2.2",
   "pytest>=8",
   "pytest-xdist>=3",
   "ruff==0.17.3",

@@ -2,7 +2,7 @@
 """Idempotently add the Claude Code "Shift+Enter inserts a newline" binding to
 the local terminal configs that need it.
 
-The logic is the public core's ``ai_harness.terminal_keybindings``, which
+The logic is the public core's ``ai_chassis.terminal_keybindings``, which
 install.sh reaches through ``ai-harness apply --only terminal-keybindings``
 (ISSUE-REF batch C-C2); this script is the CLI over it. Why each terminal
 gets the escape sequence it does is in that module's docstring.
@@ -21,7 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from ai_harness.terminal_keybindings import (  # noqa: E402, F401 - re-exported for this script's readers
+from ai_chassis.terminal_keybindings import (  # noqa: E402, F401 - re-exported for this script's readers
     _MSG,
     VSCODE_BINDING,
     WT_ACTION_ID,

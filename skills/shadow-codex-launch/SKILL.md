@@ -85,7 +85,7 @@ script, must call `TaskCreate` and `TaskUpdate`.
    `run_in_background: true` (again no `&`, `nohup`, or `disown`):
 
    ```bash
-   python -m ai_harness.shadow_watcher_runner \
+   python -m ai_chassis.shadow_watcher_runner \
      --job-id "$job_id" --claim-id "$claim_id"
    ```
 

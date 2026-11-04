@@ -17,9 +17,13 @@ regex = '''example-user-home/'''
 description = "Non-secret content exclusions"
 regexes = [
   '''^[0-9a-f]{64}$''',
+  '''^reason=wake-budget$''',
 ]
 # export-provenance.json's "files" map is filename -> sha256 content hash for
 # every shipped file; those hex digests trip the generic-api-key entropy rule
 # but are not secrets. Verified 2026-08-20 via a real gitleaks scan against a
 # freshly built export candidate: two findings, both this
 # pattern, zero real leaks.
+# The context supervisor passes an 18-character log label for a wake-budget disarm next to a
+# variable named key; the generic-api-key rule reads the label as a secret. Found by a gitleaks
+# scan of the wave-1 candidate: one finding, this label, no real secret.

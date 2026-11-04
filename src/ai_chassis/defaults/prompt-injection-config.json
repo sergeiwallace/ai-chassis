@@ -1,0 +1,57 @@
+{
+  "enabled": true,
+  "landing_timeout_seconds": 5,
+  "ready_wait_seconds": 30,
+  "ready_poll_seconds": 0.5,
+  "max_typed_chars": 800,
+  "multiline_mode": {
+    "enabled": true,
+    "verified_cc_versions": ["2.1.296", "2.1.300", "2.1.301", "2.1.302"],
+    "max_chars": 4000,
+    "chunk_chars": 800,
+    "chunk_pause_seconds": 0.3
+  },
+  "stage_walk": {
+    "enabled": true,
+    "max_filler_rows": 12,
+    "max_row_moves": 400,
+    "capture_settle_seconds": 0.15,
+    "staged_quiet_seconds": 1.0,
+    "late_frame_seconds": 10,
+    "undo_max_retries": 3
+  },
+  "capability": {
+    "inconclusive_escalate_after": 3
+  },
+  "validation": {
+    "pre_submit": true,
+    "post_submit": true
+  },
+  "completion_timeout_seconds": 60,
+  "restage_backoff_ceiling_seconds": 300,
+  "debug_diagnostics_enabled": false,
+  "boundary_hold": {"enabled": true, "ttl_seconds": 1800},
+  "use_cases": {
+    "start-goal": {"enabled": true, "self_heal": {"enabled": true, "max_rounds": 3}},
+    "self-heal": {"enabled": true},
+    "repair-escalation": {"enabled": true},
+    "idle-nudge": {"enabled": true},
+    "goal-clear": {
+      "enabled": true,
+      "landing_attachment": {"type": "goal_status", "met": true, "sentinel": true}
+    },
+    "goal-loop-nudge": {"enabled": true},
+    "inbox-nudge": {"enabled": true},
+    "compact": {"enabled": true},
+    "continuation": {"enabled": true},
+    "reauth-wake": {"enabled": true},
+    "launch-resume": {"enabled": true},
+    "remote-launch": {"enabled": true},
+    "wq-nudge": {"enabled": true},
+    "session-restart": {"enabled": true},
+    "save-state": {"enabled": true},
+    "simulated-uat": {"enabled": true},
+    "slack-reply": {"enabled": true, "self_heal": {"enabled": false}},
+    "session-reload": {"enabled": true}
+  }
+}

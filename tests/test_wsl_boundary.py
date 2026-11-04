@@ -9,7 +9,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
 
-from ai_harness.apply import ApplyError, InstallTarget, apply
+from ai_chassis.apply import ApplyError, InstallTarget, apply
 
 
 def test_wsl_mnt_target_is_refused_before_apply_mutates_state(tmp_path: Path) -> None:

@@ -1,0 +1,27 @@
+{
+  "_about": "Claude Code built-in slash commands the prompt-injection library may type, each with the oldest Claude Code version it is known to exist in. A built-in has no skill file to find, so SlashCommandInstalled checks the target session's version against 'since'. '0.0.0' means the command predates every Claude Code version this repo's own docs cite, so the floor admits any readable version; it is not a measured introduction date.",
+  "commands": {
+    "/exit": {"since": "0.0.0", "source": "predates every version cited in this repo"},
+    "/compact": {"since": "0.0.0", "source": "predates every version cited in this repo"},
+    "/clear": {"since": "0.0.0", "source": "predates every version cited in this repo"},
+    "/config": {"since": "0.0.0", "source": "predates every version cited in this repo"},
+    "/help": {"since": "0.0.0", "source": "predates every version cited in this repo"},
+    "/mcp": {"since": "0.0.0", "source": "predates every version cited in this repo"},
+    "/model": {"since": "0.0.0", "source": "predates every version cited in this repo"},
+    "/rewind": {"since": "0.0.0", "source": "predates every version cited in this repo"},
+    "/resume": {"since": "0.0.0", "source": "predates every version cited in this repo"},
+    "/status": {"since": "0.0.0", "source": "predates every version cited in this repo"},
+    "/usage": {"since": "0.0.0", "source": "predates every version cited in this repo"},
+    "/reload-plugins": {
+      "since": "2.1.308",
+      "source": "the oldest Claude Code version measured to carry the command: the 2.1.308, 2.1.309 and 2.1.310 binaries on example-project-ec2 (the only versions installed there) each contain the /reload-plugins command and its 'Run /reload-plugins --force to apply' string (rg, 2026-10-25, ISSUE-REF). The vendor changelog was not read from this host, so the true introduction may be older; a session below the floor is refused unknown-command, the safe direction."
+    },
+    "/goal": {
+      "since": "2.1.234",
+      "source": "the vendor /goal reference (code.claude.com/docs, the /goal page, fetched 2026-10-10): 'Check-ins require Claude Code v2.1.234 or later'. The page states no 'available since' version, so 2.1.234 is the oldest version the vendor names, not a measured introduction; the true introduction may be older.",
+      "native_midturn": true,
+      "enqueue_echo_prefix": "Goal set: ",
+      "native_midturn_source": "measured 2026-10-10 on Claude Code 2.1.296 (ISSUE-REF) and present in live transcripts back to 2.1.263: submitted into a busy session, /goal takes effect at once and writes a queue-operation enqueue whose content is 'Goal set: <args>' plus a goal_status attachment, never a <command-name>/goal</command-name> record (tests/prompt_injection/fixtures/goal-busy-2.1.296.jsonl)."
+    }
+  }
+}

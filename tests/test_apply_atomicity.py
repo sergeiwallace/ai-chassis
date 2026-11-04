@@ -7,9 +7,9 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
 
-import ai_harness.apply as apply_module
-from ai_harness.apply import ApplyError, InstallTarget, apply, doctor
-from ai_harness.links import LinkError, TargetState, restore
+import ai_chassis.apply as apply_module
+from ai_chassis.apply import ApplyError, InstallTarget, apply, doctor
+from ai_chassis.links import LinkError, TargetState, restore
 
 
 def _hygiene(tmp_path: Path) -> tuple[Path, Path]:
@@ -98,7 +98,7 @@ def test_directory_source_is_refused_by_ad2(tmp_path: Path) -> None:
 
 def test_hash_of_directory_symlink_is_not_a_file_error(tmp_path: Path) -> None:
     """F-15: symlink-to-directory drift observation does not read it as a file."""
-    from ai_harness.apply import _hash
+    from ai_chassis.apply import _hash
 
     directory, link = tmp_path / "directory", tmp_path / "link"
     directory.mkdir()

@@ -12,7 +12,6 @@ channel = "stable"
 # modules/gemini-delta.md plus the per-machine overlay it needs. Enabling it without
 # un-archiving fails the compile on the missing module, which is deliberate.
 agents = ["claude"]
-machines = ["mac", "linux"]
 
 [overlay_aliases]
 
@@ -46,3 +45,76 @@ global_chars = 40000
 project_chars = 40000
 combined_chars = 60000
 warn_threshold = 0.90
+
+# One table per machine; the compiled set of machines is the set of table keys below. Add a
+# table for each machine you use, and set the attributes to match it. Exactly one machine must
+# match the host (AI_HOST, the /etc/ai-harness/machine marker or the checks below), or the
+# install refuses and names the candidates.
+[machine_schema]
+version = 3
+[machine_schema.attributes]
+os_family          = ["macos", "linux", "windows"]
+shell              = ["bash", "zsh", "git-bash"]
+billing_mode       = ["subscription", "api"]
+billing_backend    = ["anthropic-direct", "aws-bedrock", "azure-gateway", "foundry", "none"]
+substrate_topology = ["remote-substrate", "local-ai-core-with-local-postgres", "substrate-less"]
+supervision        = ["launchd", "systemd-user", "task-scheduler", "none"]
+governance         = ["open", "example-client-host-gated"]
+task_store         = "string"
+task_prefix        = "string"
+[machine_schema.tooling]
+ai_cli     = [true, false, "unverified"]
+aido       = [true, false, "unverified"]
+gemini_cli = [true, false, "unverified"]
+ntfy       = [true, false, "unverified"]
+tmux       = [true, false, "unverified"]
+web_search = ["native", "example-client-host-mcp", "none"]
+codex      = ["oauth", "azure-gateway", "none"]
+
+[machine.mac]
+aliases            = []
+os_family          = "macos"
+shell              = "zsh"
+billing_mode       = "subscription"
+billing_backend    = "anthropic-direct"
+substrate_topology = "substrate-less"
+supervision        = "none"
+governance         = "open"
+task_store         = ""
+task_prefix        = ""
+tooling.ai_cli     = false
+tooling.aido       = false
+tooling.gemini_cli = false
+tooling.ntfy       = false
+tooling.tmux       = true
+tooling.web_search = "native"
+tooling.codex      = "none"
+platform           = "darwin"
+hostname_exact     = []
+hostname_prefix    = []
+path_exists        = []
+settings_fragment  = ""
+
+[machine.linux]
+aliases            = []
+os_family          = "linux"
+shell              = "bash"
+billing_mode       = "subscription"
+billing_backend    = "anthropic-direct"
+substrate_topology = "substrate-less"
+supervision        = "none"
+governance         = "open"
+task_store         = ""
+task_prefix        = ""
+tooling.ai_cli     = false
+tooling.aido       = false
+tooling.gemini_cli = false
+tooling.ntfy       = false
+tooling.tmux       = true
+tooling.web_search = "native"
+tooling.codex      = "none"
+platform           = "linux"
+hostname_exact     = []
+hostname_prefix    = []
+path_exists        = []
+settings_fragment  = ""

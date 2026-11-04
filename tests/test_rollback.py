@@ -7,8 +7,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
 
-import ai_harness.apply as apply_module
-from ai_harness.apply import ApplyError, InstallTarget, apply, doctor, rollback
+import ai_chassis.apply as apply_module
+from ai_chassis.apply import ApplyError, InstallTarget, apply, doctor, rollback
 
 
 def _hygiene(tmp_path: Path) -> tuple[Path, Path]:

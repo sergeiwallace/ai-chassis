@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from ai_harness.shadow_watcher_canary import CanaryError, CanaryRequest, run_canary
+from ai_chassis.shadow_watcher_canary import CanaryError, CanaryRequest, run_canary
 
 
 def _request() -> CanaryRequest:

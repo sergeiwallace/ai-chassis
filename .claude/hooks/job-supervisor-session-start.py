@@ -12,7 +12,7 @@ EVENT_NAME = "SessionStart"
 def main() -> int:
     root = Path(__file__).resolve().parents[2]
     sys.path.insert(0, str(root / "src"))
-    from ai_harness.job_supervisor_pickup import run
+    from ai_chassis.job_supervisor_pickup import run
 
     return run(EVENT_NAME, watch_paths=True)
 

@@ -29,11 +29,11 @@ from pathlib import Path
 
 import pytest
 
-from ai_harness.settings_merge import merge_settings_template
+from ai_chassis.settings_merge import merge_settings_template
 
 REPO_ROOT = Path(__file__).parent.parent
 SHIPPED_TEMPLATE = (
-    REPO_ROOT / "src" / "ai_harness" / "defaults" / "settings.template.json"
+    REPO_ROOT / "src" / "ai_chassis" / "defaults" / "settings.template.json"
 )
 
 WIDE_CONTEXT_MODEL = "us.anthropic.claude-opus-5[1m]"

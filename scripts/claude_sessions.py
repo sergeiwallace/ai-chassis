@@ -35,7 +35,6 @@ ensure_supported_python()
 
 import datetime
 import json
-import logging
 import math
 import os
 import re
@@ -983,7 +982,7 @@ ATTACH_CACHE_INTERVAL_S = 120
 def _attach_cache_interval() -> float:
     """Read the shared TOML/overlay at CALL time; a broken edit forces fresh proof."""
     try:
-        from ai_harness.config_tables import DEFAULT_CONFIG_PATH, read_layered_tables
+        from ai_chassis.config_tables import DEFAULT_CONFIG_PATH, read_layered_tables
 
         section = read_layered_tables(DEFAULT_CONFIG_PATH).get("agent_mail_notify", {})
         value = section.get("attach_cache_interval_s", ATTACH_CACHE_INTERVAL_S)
@@ -1186,6 +1185,10 @@ def _resolved_attach(  # noqa: C901, PLR0911, PLR0915 -- each failed evidence ch
 def _session_forebear(pid: int, argv: list[str]) -> tuple[int, list[str]] | None:
     """A daemon is an identity boundary, even with a titled creator above it."""
     if _untitled_daemon(argv):
+        # Imported here, not at the top: logging pulls in about a megabyte of modules that
+        # every caller of this file would otherwise read at start, for this one warning.
+        import logging  # noqa: PLC0415
+
         logging.getLogger(__name__).warning("daemon-resident, no session identity")
         return None
     return pid, argv

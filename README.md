@@ -13,9 +13,8 @@ around the model: agent skills, session and context configuration, git and workt
 helpers, review and audit evidence, and the tests for them.
 
 > **Status.** This repository is a generalized extract that grows in small releases.
-> It is a source toolkit today. There is no top-level command-line application and no
-> package on PyPI yet; both are planned. See [Status](#status) and the
-> [changelog](CHANGELOG.md).
+> It installs an `ai-chassis` command and a Python package. It is not on PyPI yet. See
+> [Get started](#get-started), [Status](#status) and the [changelog](CHANGELOG.md).
 
 ## Contents
 
@@ -50,7 +49,7 @@ ai-chassis collects the parts that answer those problems:
 | --- | --- |
 | `skills/` | Agent skills. Each skill is a `SKILL.md` plus its helper scripts. The [list below](#skills-in-this-release) names the ones that ship a `SKILL.md` in this release. |
 | `projects-wide-session-config/` | Shared modules and rules from which per-machine agent context files are composed, with an example config. |
-| `src/ai_harness/` | Python modules that compose and apply that configuration: profiles, schema, settings merge, links and generations. |
+| `src/ai_chassis/` | Python modules that compose and apply that configuration: profiles, schema, settings merge, links and generations. |
 | `scripts/` | Helpers for session lifecycle, git and worktree safety, review and audit evidence, and quality checks. |
 | `hooks/`, `shell/`, `launchd/` | A Claude Code settings validator, terminal-mode reset helpers, and a macOS launch agent for the job supervisor. |
 | `docs/` | Procedures, templates for designs, plans, research and audits, and a [documentation guide](docs/README.md). |
@@ -66,7 +65,7 @@ flowchart LR
         modules["Shared modules and rules"]
         overlay["Per-machine overlay"]
     end
-    modules --> compose["Compose and apply<br/>(src/ai_harness)"]
+    modules --> compose["Compose and apply<br/>(src/ai_chassis)"]
     overlay --> compose
     compose --> context["Agent context files<br/>for one machine"]
     context --> agent["Coding agent session"]
@@ -124,18 +123,36 @@ files only, and their `SKILL.md` files arrive in later releases.
 
 ## Get started
 
-Download or clone this repository and open its root directory. Install Python 3.11
-or newer, Git and [uv](https://docs.astral.sh/uv/), then install the development
-tools and run the Python tests (several tests create temporary Git repositories):
+You need Git, Python 3.11 or newer and [uv](https://docs.astral.sh/uv/).
+
+Install the command with the bootstrap installer. It picks the newest release, clones it,
+installs the `ai-chassis` command with uv, and creates an initial configuration file:
+
+```sh
+git clone https://github.com/sergeiwallace/ai-chassis.git
+bash ai-chassis/install.sh
+```
+
+On Windows, run `install.ps1` from PowerShell instead. It follows the same steps but has
+not been run on Windows yet.
+
+The installer keeps its checkout in `~/.local/share/ai-chassis` and installs the command
+from it, because several commands read the scripts and configuration that sit beside the
+package. Run it again to move to a newer release. Every choice has a flag and an
+environment variable: `--ref`, `--dir`, `--bin-dir`, `--config-dir`, `--repo`,
+`--templates`, `--install-uv`, `--no-init` and `--dry-run`. Run `bash install.sh --help`
+for the list. `--templates DIR` copies the files in `DIR` into the checkout's `config`
+directory when they are not there yet, so a team can start from its own defaults.
+
+To work on the code instead, clone the repository, then install the development tools
+and run the tests (several tests create temporary Git repositories):
 
 ```sh
 uv sync --frozen
 uv run pytest
 ```
 
-The project metadata configures this source checkout and its test environment. It
-does not install a Python distribution or register a console command. Python modules
-are available under `src/`, scripts under `scripts/`, agent skills under `skills/`
+Python modules are under `src/`, scripts under `scripts/`, agent skills under `skills/`
 and document templates under `docs/`. Individual tools may require additional
 dependencies described alongside their source. Read a tool's instructions before you
 run it.
@@ -143,9 +160,9 @@ run it.
 ## Status
 
 Alpha. Releases are small and frequent: each one adds a subsystem or fixes a defect,
-and the [changelog](CHANGELOG.md) says which. The next releases add the installer and
-command-line application, then the remaining core modules, skills, hooks and
-configuration templates.
+and the [changelog](CHANGELOG.md) says which. The command line application and the
+installer are in; a PyPI release is planned, and the remaining core modules, skills,
+hooks and configuration templates follow.
 
 Examples and templates are starting points to adapt to your own project. The Python
 suite covers the included test modules; it does not establish support for every tool

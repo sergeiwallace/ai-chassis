@@ -1,0 +1,43 @@
+{
+  "enabled": true,
+  "idle_after_seconds": 300,
+  "backoff_factor": 2,
+  "max_backoff_seconds": 3600,
+  "max_nudges_per_epoch": 6,
+  "fallback_after_seconds": 120,
+  "marker_ttl_seconds": 900,
+  "post_compact_grace_seconds": 180,
+  "clock_skew_seconds": 90,
+  "quiet_hours": [],
+  "typed_fallback_enabled": true,
+  "held_retry_after_seconds": 21600,
+  "max_nudge_chars": 1600,
+  "loop_clear_enabled": true,
+  "loop_clear_after_rejections": 3,
+  "loop_clear_after_working_rejections": 6,
+  "loop_clear_max_stretches": 1,
+  "loop_clear_retry_seconds": 240,
+  "transcript_scan_bytes": 134217728,
+  "qualifying_template_names": [
+    "work-all-in-progress",
+    "work-all-in-progress-example-project",
+    "fleet-cleanup-and-in-progress-example-project"
+  ],
+  "condition_patterns": [
+    "(?is)SUCCESS\\s+—\\s+ALL MUST BE TRUE.*in-progress.*/exit-goal",
+    "(?i)in[ -]progress .{0,40}(beads|cc) task"
+  ],
+  "terminal_phrases": [
+    "GOAL TERMINAL:",
+    "GOAL COMPLETE",
+    "GOAL BLOCKED",
+    "GOAL BUDGET EXHAUSTED",
+    "GOAL OUT OF SCOPE"
+  ],
+  "terminal_user_commands": ["/exit-goal", "/goal clear"],
+  "profile_variants": {
+    "example-project-ec2": "example-project",
+    "example-project-sagemaker": "example-project",
+    "example-project-windows": "example-project"
+  }
+}

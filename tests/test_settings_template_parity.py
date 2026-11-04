@@ -22,7 +22,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).parent.parent
 SHELL_INSTALLER_TEMPLATE = REPO_ROOT / ".claude" / "settings.template.json"
 PACKAGED_TEMPLATE = (
-    REPO_ROOT / "src" / "ai_harness" / "defaults" / "settings.template.json"
+    REPO_ROOT / "src" / "ai_chassis" / "defaults" / "settings.template.json"
 )
 
 

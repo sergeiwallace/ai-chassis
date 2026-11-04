@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "ai-harness-core": {
+      "type": "stdio",
+      "command": "$interpreter",
+      "args": ["-P", "-m", "ai_chassis.mcp"],
+      "env": {"AI_HARNESS_CONFIG_HOME": "$config_home"}
+    }
+  }
+}
