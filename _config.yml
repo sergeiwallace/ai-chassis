@@ -1,0 +1,40 @@
+# GitHub Pages configuration for the ai-chassis site.
+#
+# Pages builds from the main branch, root, with GitHub's own Jekyll. The site is the README
+# rendered through one layout (index.md includes README.md). Only index.md, the layout and the
+# top-level documents are meant to be built: every directory is excluded below so that no file
+# in the repository is processed as a page, and tests/test_pages_site.py fails if a new
+# top-level directory is not listed here.
+title: ai-chassis
+description: >-
+  A modular, extensible AI agent harness and toolkit built primarily around Claude Code and
+  Codex: reusable skills, plugins, context files, hooks and scripts for long-running
+  autonomous multi-agent workflows across many repositories.
+markdown: kramdown
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+exclude:
+  - codex
+  - config
+  - docs
+  - hooks
+  - launchd
+  - packages
+  - projects-wide-session-config
+  - scripts
+  - services
+  - shell
+  - skills
+  - src
+  - tests
+  - config.example.toml
+  - install.sh
+  - install.ps1
+  - package.json
+  - pyproject.toml
+  - pytest_memory_guard.py
+  - uv.lock
+  - VERSION

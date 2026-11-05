@@ -6,6 +6,31 @@ All notable changes to ai-chassis are recorded here. The format follows
 0, a minor release may add a subsystem and may change interfaces; a patch release only
 fixes defects and documentation.
 
+## [0.2.2]
+
+### Added
+
+- A project site on GitHub Pages, built from the README with GitHub's own Jekyll and
+  published from the main branch. It shows the same text as the README, and draws the
+  README's diagrams in the browser with a pinned copy of mermaid (version 11.4.1, checked
+  by a subresource integrity hash); without it the diagrams stay readable as text.
+- `_config.yml`, `_layouts/default.html` and `index.md` for the site, and a test that
+  keeps the site's build limited to those files: every top-level directory must be listed
+  in the exclude list of `_config.yml`, only `index.md` may carry front matter, the README
+  may not contain Liquid syntax, and the layout may load only the one pinned script.
+
+### Changed
+
+- The README's diagram of the release stages is now a timeline. In 0.2.1 it was a wide
+  chart that was scaled down until its text could not be read.
+- The git inbox watcher builds its date-parsing tables once when it is imported, so the
+  child processes it starts begin faster. Behavior is otherwise unchanged.
+- The same-machine messaging check now requires the target session to have a live
+  registry record, and reports the native route unavailable otherwise. Before, the
+  sender's own socket alone made it report available.
+- The bundled VS Code settings turn off git worktree scanning, automatic repository
+  detection, refresh and fetch.
+
 ## [0.2.1]
 
 ### Changed

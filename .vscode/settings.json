@@ -1,5 +1,8 @@
 {
-  "git.detectWorktrees": true,
+  "git.detectWorktrees": false,
+  "git.autorefresh": false,
+  "git.autofetch": false,
+  "git.autoRepositoryDetection": false,
   "git.detectWorktreesLimit": 200,
   "[plaintext]": {
     "editor.wordWrap": "on"

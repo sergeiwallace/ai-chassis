@@ -188,26 +188,11 @@ flowchart LR
 ### Stages
 
 ```mermaid
-flowchart LR
-    subgraph released["Released"]
-        a["Installer and command"]
-        b["Configuration composition"]
-        c["Git and worktree helpers"]
-        d["First skills"]
-    end
-    subgraph next["Next"]
-        e["Core session modules"]
-        f["Full skill library"]
-        g["Hooks and settings templates"]
-    end
-    subgraph later["Later"]
-        h["Configuration templates"]
-        i["Scripts"]
-        j["Services, MCP servers, plugins"]
-        k["Deployment examples"]
-        l["Documentation and 1.0"]
-    end
-    released --> next --> later
+timeline
+    title What each stage adds
+    Released : Installer and command : Configuration composition : Git and worktree helpers : First skills
+    Next : Core session modules : Full skill library : Hooks and settings templates
+    Later : Configuration templates : Scripts : Services, MCP servers, plugins : Deployment examples : Documentation and 1.0
 ```
 
 | Stage | Sub-system | What it is | State |

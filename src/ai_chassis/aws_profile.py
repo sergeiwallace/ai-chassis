@@ -4,7 +4,7 @@ WHY THIS EXISTS (ISSUE-REF)
 ---------------------------
 Three hardcoded profile defaults have gone stale in turn on this fleet, and each time the
 caller logged a tidy skip and did nothing: an account-id-first name at the ISSUE-REF rename,
-then `example-client-host-semantic-kg-dev`/`pocllm-fullaccess` on example-client-host-windows, then both of those at the
+then `example-client-host-semantic-kg-dev`/`example-permission-set` on example-client-host-windows, then both of those at the
 ISSUE-REF rename to `{suffix}-{permset}-{id}`. The maintainer's ruling on this class of defect is that
 it gets fixed systematically rather than documented: *"you shouldn't have to remember to ever
 do this."*

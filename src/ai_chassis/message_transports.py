@@ -502,19 +502,35 @@ def local_port_open(port: int, host: str = "127.0.0.1") -> bool:
 # ----------------------------------------------------------------------------
 
 
-def native_socket_env(env: dict[str, str]) -> ProbeResult:
-    """Check if CLAUDE_CODE_MESSAGING_SOCKET is set in the environment.
+def native_socket_env(
+    env: dict[str, str],
+    slug: str = "",
+    registered_names: set[str] | frozenset[str] | None = None,
+) -> ProbeResult:
+    """Check that this session can send natively and that the target can be found by name.
+
+    `SendMessage` reaches a same-machine peer by name only through that peer's live
+    `~/.claude/sessions/<pid>.json` record. A live peer whose record is gone keeps its socket
+    but is unreachable by name, and Claude Code never writes the record back (ISSUE-REF), so
+    the caller's own socket alone is not evidence the target can be reached.
 
     Args:
         env: Environment mapping (usually os.environ)
+        slug: The target session's name.
+        registered_names: Names carried by registry records that provably describe a live
+            process. None means the fact was not gathered, and only the caller's socket is
+            judged.
 
     Returns:
-        Available if the socket env var is set and non-empty.
+        Available when the caller has a messaging socket and, where the registry was read,
+        a live record names the target.
     """
     socket_path = env.get("CLAUDE_CODE_MESSAGING_SOCKET", "").strip()
-    if socket_path:
-        return ProbeResult(available=True)
-    return ProbeResult(available=False, reason="no-messaging-socket")
+    if not socket_path:
+        return ProbeResult(available=False, reason="no-messaging-socket")
+    if registered_names is not None and slug not in registered_names:
+        return ProbeResult(available=False, reason="native-target-unregistered")
+    return ProbeResult(available=True)
 
 
 def native_cross_machine_reach(
@@ -1014,7 +1030,11 @@ def resolve(
 def _probe_native_socket_env(
     _config: dict[str, Any], context: dict[str, Any]
 ) -> ProbeResult:
-    return native_socket_env(context.get("env", os.environ))
+    return native_socket_env(
+        context.get("env", os.environ),
+        context.get("slug", ""),
+        context.get("registered_session_names"),
+    )
 
 
 def _probe_native_cross_machine_reach(

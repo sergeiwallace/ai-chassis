@@ -84,6 +84,10 @@ LAYER_HOOK = "hook"
 
 SECONDS_PER_DAY = 86_400
 _SENT_FORMATS = ("%Y-%m-%dT%H%MZ", "%Y-%m-%dT%H:%MZ", "%Y-%m-%dT%H:%M:%SZ")
+# The first strptime imports _strptime and builds its locale tables (measured 0.15 s of
+# a 0.18 s rung on example-client-host-mac, seconds under load). Pay it once here, in the importing
+# notifier, so each forked bridge rung child inherits it instead (ISSUE-REF).
+dt.datetime.strptime("2000-01-01T0000Z", _SENT_FORMATS[0])
 
 
 class LedgerUnreadableError(RuntimeError):
