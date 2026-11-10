@@ -1,0 +1,16 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths: [CHANGELOG.md, VERSION]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: sergeiwallace/.github/.github/workflows/release.yml@main
+    with:
+      version-file: VERSION
+      title: ai-chassis
